@@ -5,22 +5,80 @@ Common tasks snippets
 
 ## Create database
 
-SnappyDB use the internale storage to create your databse. It create a directory containing all the necessary files
-Ex:
+SnappyDB use the internal storage to create your database. It create a directory containing all the necessary files Ex:
+``
+/data/data/com.snappydb/files/mydatabse
+``
+##### Create using the default name
+```java
+     DB snappydb = DBFactory.open(context);
+```
+##### Create with a given name
+```java
+     DB snappydb = DBFactory.open(context, "books");
+```
+
 ## Open database
+##### Open using the default name
+```java
+     DB snappydb = DBFactory.open(context);
+```
+##### Open using a given name
+```java
+     DB snappydb = DBFactory.open(context, "books");
+```
 
 ## Close database
+```java
+     snappydb.close();
+```
 
 ## Destroy database
+```java
+     snappydb.destroy();
+```
 
 ## Insert primitive types
+```java
+     snappyDB.put("quote", "bazinga!");
+     
+     snappyDB.putShort("myshort", (short)32768);
+     
+     snappyDB.putInt("max_int", Integer.MAX_VALUE);
+     
+     snappyDB.putLong("max_long", Long.MAX_VALUE);
+     
+     snappyDB.putDouble("max_double", Double.MAX_VALUE);
+     
+     snappyDB.putFloat("myfloat", 10.30f);
+     
+     snappyDB.putBoolean("myboolean", true);
+```
 
 ## Read primitive types
-
+```java
+     String quote      = snappyDB.get("quote");
+     
+     short myshort     = snappyDB.getShort("myshort");
+     
+     int maxInt        = snappyDB.getInt("max_int");
+     
+     long maxLong      = snappyDB.getLong("max_long");
+     
+     double maxDouble  = snappyDB.getDouble("max_double", Double.MAX_VALUE);
+     
+     float myFloat     = snappyDB.getFloat("myfloat");
+     
+     boolean myBoolean = snappyDB.getBoolean("myboolean");
+```
 ## Insert Serializable 
+```java
+     AtomicInteger objAtomicInt = new AtomicInteger (42);
+     snappyDB.put("atomic integer", objAtomicInt);
+```
 
 ## Read Serializable 
-
+AtomicInteger actualAi = snappyDB.get("atomic integer", AtomicInteger.class);
 ## Insert Array
 
 ## Read Array
