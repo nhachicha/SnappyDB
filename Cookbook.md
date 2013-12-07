@@ -3,12 +3,18 @@ Cookbook
 
 Common tasks snippets
 
-## Create database
+- [Create database](#create-database)
+- [Open database](#open-database)
+- [Close database](#close-database)
+- [Destroy database](#destroy-database)
+- [Insert primitive types](#insert-primitive-types) 
+- [Read primitive types](#read-primitive-types) 
+- [Insert Serializable](#insert-serializable) 
+- [Read Serializable](#read-serializable) 
+- [Insert Array](#insert-array) 
+- [Read Array](#read-array) 
 
-SnappyDB use the internal storage to create your database. It create a directory containing all the necessary files Ex:
-``
-/data/data/com.snappydb/files/mydatabse
-``
+## Create database
 ##### Create using the default name
 ```java
      DB snappydb = DBFactory.open(context);
@@ -17,6 +23,10 @@ SnappyDB use the internal storage to create your database. It create a directory
 ```java
      DB snappydb = DBFactory.open(context, "books");
 ```
+SnappyDB use the internal storage to create your database. It create a directory containing all the necessary files Ex:
+``
+/data/data/com.snappydb/files/mydatabse
+``
 
 ## Open database
 ##### Open using the default name
