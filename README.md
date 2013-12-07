@@ -23,7 +23,7 @@ try {
 	DB snappydb = DBFactory.open(context); //create or open an existing databse using the default name
 	
 	snappydb.put("name", "Jack Reacher"); 
-	snappydb.putInt("age", 42); // 
+	snappydb.putInt("age", 42);  
 	snappydb.putBoolean("single", true);
 	snappydb.put("books", new String[]{"One Shot", "Tripwire", "61 Hours"}); 
 	
@@ -48,8 +48,8 @@ Installation
 SnappyDB use native code for performance, it's available for the three main architecture of Android: ARM, x86 and mips.
 if you want, you can download one archive that contain the libraries for all platforme (arm, x86 and mips).
 
-* [__SnappyDB for all platform__](/nhachicha/SnappyDB/releases/tag/0.1.0)
-* [__SnappyDB for ARM__](/nhachicha/SnappyDB/releases/tag/0.1.0_arm)
+* [__SnappyDB for all platform__](https://github.com/nhachicha/SnappyDB/releases/tag/0.1.0)
+* [__SnappyDB for ARM__](https://github.com/nhachicha/SnappyDB/releases/tag/0.1.0_arm)
 
 ![installation](http://snappydb.com/img/snappydb_installation.png)
 
