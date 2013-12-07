@@ -38,7 +38,7 @@ try {
 	}
  ```
 
-For more recipes please take a look at the [Cookbook](./Cookbook).
+For more recipes please take a look at the [Cookbook](./Cookbook.md).
 
 With SnappyDB you could seamlessly store and retrieve your object/array, it use [Kryo](https://github.com/EsotericSoftware/kryo) serialization which it [faster](https://github.com/eishay/jvm-serializers/wiki) than regular Java serialization.
 
@@ -48,7 +48,12 @@ Installation
 SnappyDB use native code for performance, it's available for the three main architecture of Android: ARM, x86 and mips.
 if you want, you can download one archive that contain the libraries for all platforme (arm, x86 and mips).
 
+* [__SnappyDB for all platform__](/nhachicha/SnappyDB/releases/tag/0.1.0)
+* [__SnappyDB for ARM__](/nhachicha/SnappyDB/releases/tag/0.1.0_arm)
+
 ![installation](http://snappydb.com/img/snappydb_installation.png)
+
+
 
 Copy the jars and the native files under your libs directory. your good to go!
 
