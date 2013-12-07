@@ -1,19 +1,29 @@
-SnappyDB
+Cookbook
 ========
 
-SnappyDB is a __key-value__ database for Android 
-it's an alternative for _SQLite_ if you want to use a __NoSQL__ approach.
+Common tasks snippets
 
-It allows you to store and get _primitive types_, but also a _Serializable_ object or array in a __type-safe__ way.
+## Create database
 
-SnappyDB can outperform _SQLite_ in read/write operations.
-![benchmark](http://snappydb.com/img/benchmark_sqlite_with_transaction.png)
+SnappyDB use the internale storage to create your databse. It create a directory containing all the necessary files
+Ex:
+## Open database
 
+## Close database
 
-SnappyDB is based on [leveldb](https://code.google.com/p/leveldb/) and use [snappy compression](https://code.google.com/p/snappy/) algorithm, on redundant content you could achieve a good compression ratio 
+## Destroy database
 
+## Insert primitive types
 
+## Read primitive types
 
+## Insert Serializable 
+
+## Read Serializable 
+
+## Insert Array
+
+## Read Array
 
 Usage
 -----
