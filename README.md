@@ -79,6 +79,10 @@ SnappyDB is opensource, contribution and feedback are welcomed
     See the License for the specific language governing permissions and
     limitations under the License.
     
+    
+<a href="https://twitter.com/nabil_hachicha" class="twitter-follow-button" data-show-count="false">Follow @nabil_hachicha</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
