@@ -55,7 +55,7 @@ if you want, you can download one archive that contain the libraries for all pla
 
 
 
-Copy the jars and the native files under your libs directory. your good to go!
+Copy the jars and the native files under your libs directory. you're good to go!
 
 _SnappyDB is an Adroid Library project, you can also import it as a library dependency_
 
