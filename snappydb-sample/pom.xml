@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.snappydb</groupId>
         <artifactId>snappydb-parent</artifactId>
-        <version>0.1.0</version>
+        <version>0.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.snappydb</groupId>
             <artifactId>snappydb-native</artifactId>
-            <version>0.1.0</version>
+            <version>0.1.1-SNAPSHOT</version>
             <classifier>armeabi-v7a</classifier>
             <type>so</type>
         </dependency>
