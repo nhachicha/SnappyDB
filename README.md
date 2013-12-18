@@ -64,7 +64,7 @@ SnappyDB use native code for performance, it's available for the three main arch
 </dependency>
 <dependency>
   <groupId>com.snappydb</groupId>
-  <artifactId>snappydb-api</artifactId>
+  <artifactId>snappydb-native</artifactId>
   <version>0.1.0</version>
   <classifier>armeabi-v7a</classifier>
   <type>so</type>
@@ -73,7 +73,7 @@ SnappyDB use native code for performance, it's available for the three main arch
 <!-- x86 library  -->            
 <dependency>
   <groupId>com.snappydb</groupId>
-  <artifactId>snappydb-api</artifactId>
+  <artifactId>snappydb-native</artifactId>
   <version>0.1.0</version>
   <classifier>x86</classifier>
   <type>so</type>
@@ -82,7 +82,7 @@ SnappyDB use native code for performance, it's available for the three main arch
 <!-- MIPS library  -->            
 <dependency>
   <groupId>com.snappydb</groupId>
-  <artifactId>snappydb-api</artifactId>
+  <artifactId>snappydb-native</artifactId>
   <version>0.1.0</version>
   <classifier>mips</classifier>
   <type>so</type>
