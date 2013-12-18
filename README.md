@@ -46,19 +46,52 @@ With SnappyDB you could seamlessly store and retrieve your object/array, it use 
 Installation
 ------------
 SnappyDB use native code for performance, it's available for the three main architecture of Android: ARM, x86 and mips.
-if you want, you can download one archive that contain the libraries for all platforme (arm, x86 and mips).
 
-* [__SnappyDB for all platform__](https://github.com/nhachicha/SnappyDB/releases/tag/0.1.0)
-* [__SnappyDB for ARM__](https://github.com/nhachicha/SnappyDB/releases/tag/0.1.0_arm)
+```xml
+<dependency>
+  <groupId>com.snappydb</groupId>
+  <artifactId>snappydb-api</artifactId>
+  <version>0.1.0</version>
+</dependency>
 
-![installation](http://snappydb.com/img/snappydb_installation.png)
+<!-- ARM libraries  -->
+<dependency>
+  <groupId>com.snappydb</groupId>
+  <artifactId>snappydb-native</artifactId>
+  <version>0.1.0</version>
+  <classifier>armeabi</classifier>
+  <type>so</type>
+</dependency>
+<dependency>
+  <groupId>com.snappydb</groupId>
+  <artifactId>snappydb-api</artifactId>
+  <version>0.1.0</version>
+  <classifier>armeabi-v7a</classifier>
+  <type>so</type>
+</dependency>
 
+<!-- x86 library  -->            
+<dependency>
+  <groupId>com.snappydb</groupId>
+  <artifactId>snappydb-api</artifactId>
+  <version>0.1.0</version>
+  <classifier>x86</classifier>
+  <type>so</type>
+</dependency>
 
+<!-- MIPS library  -->            
+<dependency>
+  <groupId>com.snappydb</groupId>
+  <artifactId>snappydb-api</artifactId>
+  <version>0.1.0</version>
+  <classifier>mips</classifier>
+  <type>so</type>
+</dependency>
+```
 
-Copy the jars and the native files under your libs directory. you're good to go!
+__For non maven users__, You need to [download](http://snappydb.com/snappydb-0.1.0.zip) a zip containing the native libraries (.so) and the api.copy them under your libs directory
 
-_SnappyDB is an Adroid Library project, you can also import it as a library dependency_
-
+![nomaven](http://snappydb.com/img/snappydb_installation_nomaven.png)
 
 
 License
