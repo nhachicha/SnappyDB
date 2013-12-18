@@ -1,0 +1,46 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1387325137931
+Build-Jdk: 1.6.0_51
+Built-By: Nabil
+Bundle-ClassPath: .,reflectasm-1.07-shaded.jar,minlog-1.2.jar,objenesis-
+ 1.2.jar
+Bundle-Description: A fast and lightweight key/value database for Androi
+ d
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: SnappyDB - API
+Bundle-SymbolicName: com.snappydb.api
+Bundle-Version: 0.1.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Embed-Dependency: *;scope=compile|runtime
+Embedded-Artifacts: reflectasm-1.07-shaded.jar;g="com.esotericsoftware.r
+ eflectasm";a="reflectasm";v="1.07";c="shaded",minlog-1.2.jar;g="com.eso
+ tericsoftware.minlog";a="minlog";v="1.2",objenesis-1.2.jar;g="org.objen
+ esis";a="objenesis";v="1.2"
+Export-Package: com.esotericsoftware.kryo;uses:="com.esotericsoftware.kr
+ yo.factories,com.esotericsoftware.kryo.io,com.esotericsoftware.kryo.uti
+ l,org.objenesis.instantiator,org.objenesis.strategy";version="0.1.0.SNA
+ PSHOT",com.esotericsoftware.kryo.factories;uses:="com.esotericsoftware.
+ kryo";version="0.1.0.SNAPSHOT",com.esotericsoftware.kryo.io;uses:="com.
+ esotericsoftware.kryo";version="0.1.0.SNAPSHOT",com.esotericsoftware.kr
+ yo.serializers;uses:="com.esotericsoftware.kryo,com.esotericsoftware.kr
+ yo.io";version="0.1.0.SNAPSHOT",com.esotericsoftware.kryo.util;uses:="c
+ om.esotericsoftware.kryo,com.esotericsoftware.kryo.io,sun.misc";version
+ ="0.1.0.SNAPSHOT",com.esotericsoftware.minlog;version="0.1.0.SNAPSHOT",
+ com.esotericsoftware.reflectasm;version="0.1.0.SNAPSHOT",com.esotericso
+ ftware.reflectasm.shaded.org.objectweb.asm;version="0.1.0.SNAPSHOT",org
+ .objenesis;version="1.2";uses:="org.objenesis.instantiator,org.objenesi
+ s.strategy",org.objenesis.instantiator;version="1.2",org.objenesis.inst
+ antiator.basic;version="1.2";uses:="org.objenesis.instantiator",org.obj
+ enesis.instantiator.gcj;version="1.2";uses:="org.objenesis.instantiator
+ ",org.objenesis.instantiator.jrockit;version="1.2";uses:="org.objenesis
+ .instantiator",org.objenesis.instantiator.perc;version="1.2";uses:="org
+ .objenesis.instantiator",org.objenesis.instantiator.sun;version="1.2";u
+ ses:="org.objenesis.instantiator",org.objenesis.strategy;version="1.2";
+ uses:="org.objenesis.instantiator"
+Import-Package: COM.jrockit.reflect;resolution:=optional,COM.newmonics.P
+ ercClassLoader;resolution:=optional,jrockit.vm;resolution:=optional,sun
+ .reflect;resolution:=optional,android.app,android.content,android.text,
+ com.esotericsoftware.kryo,com.esotericsoftware.kryo.io,javax.crypto,jav
+ ax.crypto.spec,sun.misc,sun.nio.ch
+Tool: Bnd-2.1.0.20130426-122213

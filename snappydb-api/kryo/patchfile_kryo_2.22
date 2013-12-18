@@ -1,0 +1,33 @@
+diff --git src/com/esotericsoftware/kryo/io/Output.java src/com/esotericsoftware/kryo/io/Output.java
+index 4e37c18..9016898 100644
+--- src/com/esotericsoftware/kryo/io/Output.java
++++ src/com/esotericsoftware/kryo/io/Output.java
+@@ -322,8 +322,11 @@ public class Output extends OutputStream {
+ 			if (capacity - position < charCount)
+ 				writeAscii_slow(value, charCount);
+ 			else {
+-				value.getBytes(0, charCount, buffer, position);
+-				position += charCount;
++				//FIXE the bug under Honeycomb http://stackoverflow.com/questions/12004180
++                byte[] valueB = value.getBytes();
++                for (int j = 0; j < valueB.length; j++) {
++                   this.writeByte(valueB[j]);
++                }
+ 			}
+ 			buffer[position - 1] |= 0x80;
+ 		} else {
+@@ -391,8 +394,12 @@ public class Output extends OutputStream {
+ 		if (capacity - position < charCount)
+ 			writeAscii_slow(value, charCount);
+ 		else {
+-			value.getBytes(0, charCount, buffer, position);
+-			position += charCount;
++			//FIXE the bug under Honeycomb http://stackoverflow.com/questions/12004180
++            byte[] valueB = value.getBytes();
++            for (int j = 0; j < valueB.length; j++) {
++               this.writeByte(valueB[j]);
++            }
++
+ 		}
+ 		buffer[position - 1] |= 0x80; // Bit 8 means end of ASCII.
+ 	}

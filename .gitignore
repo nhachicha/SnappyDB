@@ -1,0 +1,15 @@
+*.class
+*.dmp
+*.o
+
+# generated files
+bin/
+gen/
+#libs/
+obj/
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+
