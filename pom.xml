@@ -23,8 +23,7 @@
     <scm>
         <url>https://github.com/nhachicha/SnappyDB/</url>
         <connection>scm:git:git://github.com/nhachicha/SnappyDB.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/nhachicha/SnappyDB.git
-        </developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com/nhachicha/SnappyDB.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
@@ -42,6 +41,7 @@
 
     <developers>
         <developer>
+        	<id>nhachicha</id>
             <name>Nabil Hachicha</name>
             <email>nabil.hachicha@gmail.com</email>
         </developer>
@@ -89,6 +89,21 @@
                         </sdk>
                     </configuration>
                 </plugin>
+                
+                <plugin>
+			        <groupId>org.apache.maven.plugins</groupId>
+			        <artifactId>maven-gpg-plugin</artifactId>
+			        <executions>
+			          <execution>
+			            <id>sign-artifacts</id>
+			            <phase>verify</phase>
+			            <goals>
+			              <goal>sign</goal>
+			            </goals>
+			          </execution>
+			        </executions>
+		      </plugin>
+
             </plugins>
         </pluginManagement>
 
