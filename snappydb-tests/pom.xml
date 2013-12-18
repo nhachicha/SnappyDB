@@ -5,11 +5,12 @@
     <parent>
         <groupId>com.snappydb</groupId>
         <artifactId>snappydb-parent</artifactId>
-        <version>0.1.0</version>
+        <version>0.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>snappydb-tests</artifactId>
+  <version>0.1.0</version>
     <packaging>apk</packaging>
     <name>SnappyDB - Instrumentation Test</name>
 

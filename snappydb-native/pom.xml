@@ -5,11 +5,12 @@
     <parent>
         <groupId>com.snappydb</groupId>
         <artifactId>snappydb-parent</artifactId>
-        <version>0.1.0</version>
+        <version>0.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>snappydb-native</artifactId>
+  <version>0.1.0</version>
     <name>SnappyDB - Native libs</name>
     <!--
     Packaging is defined as 'so' - this will indicate to the Maven Android
