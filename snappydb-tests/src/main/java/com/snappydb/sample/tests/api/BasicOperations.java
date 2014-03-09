@@ -359,5 +359,29 @@ public class BasicOperations extends AndroidTestCase {
 		snappyDB.close();
 		snappyDB.destroy();
 	}
-	
+
+    @SmallTest
+	public void testKeyExists ()  throws SnappydbException {
+		snappyDB = DBFactory.open(getContext(), dbName);
+		
+		boolean exists = snappyDB.exists("UNKNOWN_STRING_KEY");
+		if (exists) fail("key should not exists");
+		
+		snappyDB.put("name", "jack Reacher");
+		exists = snappyDB.exists("name");
+		if(!exists) fail("key should nexists");
+		
+		try {
+			exists = snappyDB.exists("");
+			fail("empty key should not be allowed");
+		} catch (SnappydbException e){}
+		
+		try {
+			exists = snappyDB.exists(null);
+			fail("null key should not be allowed");
+		} catch (SnappydbException e){}
+		
+		snappyDB.close();
+		snappyDB.destroy();
+	}	
 }

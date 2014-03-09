@@ -167,6 +167,13 @@ JNIEXPORT jlong JNICALL Java_com_snappydb_internal_DBImpl__1_1getLong
 JNIEXPORT jfloat JNICALL Java_com_snappydb_internal_DBImpl__1_1getFloat
   (JNIEnv *, jobject, jstring);
 
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __exists
+ * Signature: (Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1exists
+  (JNIEnv *, jobject, jstring);
 
 #ifdef __cplusplus
 }

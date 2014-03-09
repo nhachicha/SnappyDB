@@ -77,5 +77,10 @@ public interface DB {
 	public long getLong(String key)  throws SnappydbException;
 	
 	public float getFloat(String key)  throws SnappydbException;
+	
+	//****************************
+	//*      KEYS OPERATIONS 
+	//****************************	
+	public boolean exists (String key) throws SnappydbException;
 }
 

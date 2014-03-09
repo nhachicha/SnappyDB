@@ -284,6 +284,16 @@ public class DBImpl implements DB {
 		
 		return __getFloat(key);
 	}
+
+	//****************************
+	//*      KEYS OPERATIONS 
+	//****************************
+	@Override
+	public boolean exists (String key) throws SnappydbException {
+		checkArgs(key);
+		
+		return __exists(key);
+	}
 	
 	// ***********************
 	// *      UTILS
@@ -329,5 +339,7 @@ public class DBImpl implements DB {
 	private native double __getDouble(String key) throws SnappydbException; 
 	private native long __getLong(String key) throws SnappydbException;
 	private native float __getFloat(String key) throws SnappydbException;
+	
+	private native boolean __exists (String key) throws SnappydbException;
 	
 }
