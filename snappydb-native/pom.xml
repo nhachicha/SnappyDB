@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.snappydb</groupId>
         <artifactId>snappydb-parent</artifactId>
-        <version>0.2.0-SNAPSHOT</version>
+        <version>0.2.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
