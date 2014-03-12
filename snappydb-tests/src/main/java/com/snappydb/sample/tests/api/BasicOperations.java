@@ -369,7 +369,15 @@ public class BasicOperations extends AndroidTestCase {
 		
 		snappyDB.put("name", "jack Reacher");
 		exists = snappyDB.exists("name");
+		exists = snappyDB.exists("name");
 		if(!exists) fail("key should nexists");
+		
+		exists = snappyDB.exists("nam");
+		if (exists) fail("similar key should not exists");
+		
+		snappyDB.del("name");
+		exists = snappyDB.exists("name");
+		if (exists) fail("deleted key should not exists");
 		
 		try {
 			exists = snappyDB.exists("");

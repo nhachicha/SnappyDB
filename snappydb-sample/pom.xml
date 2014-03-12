@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.snappydb</groupId>
             <artifactId>snappydb-native</artifactId>
-            <version>0.2.0-SNAPSHOT</version>
+	    <version>${project.version}</version>
             <classifier>armeabi-v7a</classifier>
             <type>so</type>
         </dependency>

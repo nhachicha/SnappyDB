@@ -702,37 +702,28 @@ JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1exists
 	LOGI("does key exists");
 
 	if (!isDBopen) {
-		throwException(env, "database is not open");
+		throwException (env, "database is not open");
 		return NULL;
 	}
 
 	const char* key = env->GetStringUTFChars(jKey, 0);
-
-	//using iterator that return a Slice
-	//since we do not need to copy potentially large keys and values
-	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
-	it->Seek(key);
+	std::string value;
+	leveldb::Status status = db->Get(leveldb::ReadOptions(), key, &value);
 
 	env->ReleaseStringUTFChars(jKey, key);
 
-	if (it->status().ok()) {
+	if (status.ok()) {
+		LOGI("Key Found ");
+		return JNI_TRUE;
 
-		if (it->Valid()) {
-			LOGI("Key Found ");
-			delete it;
-			return JNI_TRUE;
-
-		} else {
-			LOGI("Key Not Found ");
-			delete it;
-			return JNI_FALSE;
-		}
+	} else if (status.IsNotFound()) {
+		LOGI("Key Not Found ");
+		return JNI_FALSE;
 
 	} else {
-		std::string err("Failed to check if a key exists: " + it->status().ToString());
-		delete it;
+		std::string err("Failed to check if a key exists: " + status.ToString());
 		throwException(env, err.c_str());
-		return JNI_FALSE;
+		return NULL;
 	}
 }
 

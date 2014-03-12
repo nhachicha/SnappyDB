@@ -37,7 +37,8 @@ public class HelloSnappyDB extends Activity
 			snappydb.putInt("age", 42);
 			snappydb.putBoolean("single", true);
 			snappydb.put("books", new String[]{"One Shot", "Tripwire", "61 Hours"});
-			
+			boolean exists = snappydb.exists("name");
+			System.out.println(">>>>>>>>>>>>>>>>>>>>>> IS KEY EXISTS ?" + exists);			
 			String 	 name   =  snappydb.get("name");
 			int 	 age    =  snappydb.getInt("age");
 			boolean  single =  snappydb.getBoolean("single");
