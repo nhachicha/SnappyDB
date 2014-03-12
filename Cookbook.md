@@ -13,6 +13,8 @@ Common tasks snippets
 - [Read Serializable](#read-serializable) 
 - [Insert Array](#insert-array) 
 - [Read Array](#read-array) 
+- [Check key](#check-key)
+- [Delete key](#delete-key)
 
 ## Create database
 ##### Create using the default name
@@ -102,4 +104,12 @@ SnappyDB use the internal storage to create your database. It create a directory
 ## Read Array
 ```java
      Number [] numbers = snappyDB.getArray("array", Number.class);
+```
+## Check Key
+```java
+     boolean isKeyExists = snappyDB.exists("key");
+```
+## Delete Key
+```java
+     snappyDB.del("key");
 ```
