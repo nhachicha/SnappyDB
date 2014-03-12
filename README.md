@@ -120,7 +120,7 @@ Common tasks snippets
 ```java
      DB snappydb = DBFactory.open(context, "books");
 ```
-SnappyDB use the internal storage to create your database. It create a directory containing all the necessary files Ex:
+SnappyDB use the internal storage to create your database. It creates a directory containing all the necessary files Ex:
 ``
 /data/data/com.snappydb/files/mydatabse
 ``
