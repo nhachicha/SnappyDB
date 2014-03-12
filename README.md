@@ -51,21 +51,21 @@ SnappyDB use native code for performance, it's available for the three main arch
 <dependency>
   <groupId>com.snappydb</groupId>
   <artifactId>snappydb-api</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
 </dependency>
 
 <!-- ARM libraries  -->
 <dependency>
   <groupId>com.snappydb</groupId>
   <artifactId>snappydb-native</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <classifier>armeabi</classifier>
   <type>so</type>
 </dependency>
 <dependency>
   <groupId>com.snappydb</groupId>
   <artifactId>snappydb-native</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <classifier>armeabi-v7a</classifier>
   <type>so</type>
 </dependency>
@@ -74,7 +74,7 @@ SnappyDB use native code for performance, it's available for the three main arch
 <dependency>
   <groupId>com.snappydb</groupId>
   <artifactId>snappydb-native</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <classifier>x86</classifier>
   <type>so</type>
 </dependency>
@@ -83,13 +83,13 @@ SnappyDB use native code for performance, it's available for the three main arch
 <dependency>
   <groupId>com.snappydb</groupId>
   <artifactId>snappydb-native</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <classifier>mips</classifier>
   <type>so</type>
 </dependency>
 ```
 
-__For non maven users__, You need to [download](http://snappydb.com/snappydb-0.1.0.zip) a zip containing the native libraries (.so) and the api.copy them under your libs directory
+__For non maven users__, You need to [download](http://snappydb.com/snappydb-0.2.0.zip) a zip containing the native libraries (.so) and the api.copy them under your libs directory
 
 ![nomaven](http://snappydb.com/img/snappydb_installation_nomaven.png)
 
@@ -172,7 +172,7 @@ SnappyDB use the internal storage to create your database. It create a directory
      
      long maxLong      = snappyDB.getLong("max_long");
      
-     double maxDouble  = snappyDB.getDouble("max_double", Double.MAX_VALUE);
+     double maxDouble  = snappyDB.getDouble("max_double");
      
      float myFloat     = snappyDB.getFloat("myfloat");
      
