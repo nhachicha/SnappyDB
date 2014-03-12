@@ -77,7 +77,7 @@ SnappyDB use the internal storage to create your database. It create a directory
      
      long maxLong      = snappyDB.getLong("max_long");
      
-     double maxDouble  = snappyDB.getDouble("max_double", Double.MAX_VALUE);
+     double maxDouble  = snappyDB.getDouble("max_double");
      
      float myFloat     = snappyDB.getFloat("myfloat");
      
