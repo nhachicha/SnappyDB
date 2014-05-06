@@ -25,16 +25,39 @@ import com.snappydb.internal.DBImpl;
 public class DBFactory {
 	private final static String DEFAULT_DBNAME = "snappydb";
 
-	//Return the Database with the given name, if it doesn't exist create it
-	public static DB open (Context ctx, String dbName) throws SnappydbException {
-		String dbFilePath = ctx.getFilesDir().getAbsolutePath() + File.separator + dbName;
-		return new DBImpl(dbFilePath);
+    /**
+     * Return the Database with the given folder and name, if it doesn't exist create it
+     * @param folder the folder of the db file will be stored
+     * @param dbName database file name
+     * @return Database handler {@link com.snappydb.DB}
+     * @throws SnappydbException
+     */
+    public static DB open(String folder, String dbName) throws SnappydbException {
+        String dbFilePath = folder + File.separator + dbName;
+        return new DBImpl(dbFilePath);
+    }
+
+    /**
+     * Return the Database with the given name, if it doesn't exist create it
+     * @param ctx context
+     * @param dbName database file name
+     * @return Database handler {@link com.snappydb.DB}
+     * @throws SnappydbException
+     */
+	public static DB open(Context ctx, String dbName) throws SnappydbException {
+        return open(ctx.getFilesDir().getAbsolutePath(), dbName);
 	}
-	
-	public static DB open (Context ctx) throws SnappydbException {
+
+    /**
+     * Return the Database with the default name {@link com.snappydb.DBFactory#DEFAULT_DBNAME}, if it doesn't exist create it
+     * @param ctx context
+     * @return Database handler {@link com.snappydb.DB}
+     * @throws SnappydbException
+     */
+	public static DB open(Context ctx) throws SnappydbException {
 			return open(ctx, DEFAULT_DBNAME);
 	}
-	
+
 	static {
 		System.loadLibrary("snappydb-native");
 	}
