@@ -1,0 +1,43 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.10.1'
+    }
+}
+
+apply plugin: 'android-library'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.3"
+
+    defaultConfig{
+        minSdkVersion 15
+        targetSdkVersion 19
+        versionCode 101
+        versionName "1.0.1"
+    }
+
+    sourceSets.main {
+        jniLibs.srcDir 'src/main/libs'
+        jni.srcDirs = [] //disable automatic ndk-build call
+    }
+
+    buildTypes.debug.jniDebugBuild true
+
+    // call regular ndk-build script from app directory
+    task ndkBuild(type: Exec) {
+            commandLine 'ndk-build', '-C', file('src/main').absolutePath
+    }
+
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn ndkBuild
+    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
