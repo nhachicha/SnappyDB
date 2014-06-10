@@ -31,6 +31,10 @@ import com.snappydb.SnappydbException;
 public class DBImpl implements DB {
 	private String dbPath;
 
+	static {
+		System.loadLibrary("snappydb-native");
+	}
+
 	public DBImpl(String path) throws SnappydbException {
 		dbPath = path;
 		__open(dbPath);

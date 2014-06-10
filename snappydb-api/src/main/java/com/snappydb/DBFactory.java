@@ -58,9 +58,5 @@ public class DBFactory {
 			return open(ctx, DEFAULT_DBNAME);
 	}
 
-	static {
-		System.loadLibrary("snappydb-native");
-	}
-	
 }
 
