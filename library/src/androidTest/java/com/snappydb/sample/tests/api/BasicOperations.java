@@ -19,12 +19,25 @@ package com.snappydb.sample.tests.api;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import com.esotericsoftware.kryo.Registration;
+import com.esotericsoftware.kryo.Serializer;
 import com.snappydb.DB;
 import com.snappydb.DBFactory;
+import com.snappydb.SnappyDB;
 import com.snappydb.SnappydbException;
 
+import java.io.File;
+import java.lang.reflect.InvocationHandler;
 import java.math.BigDecimal;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import de.javakaffee.kryoserializers.BitSetSerializer;
+import de.javakaffee.kryoserializers.CollectionsSingletonSetSerializer;
+import de.javakaffee.kryoserializers.GregorianCalendarSerializer;
+import de.javakaffee.kryoserializers.JdkProxySerializer;
 
 public class BasicOperations extends AndroidTestCase {
 	private DB snappyDB = null;
@@ -38,6 +51,108 @@ public class BasicOperations extends AndroidTestCase {
 		
 		snappyDB.destroy();
 	}
+
+    @SmallTest
+    public void testCreateDBUsingDefaultBuilder () throws SnappydbException  {
+        snappyDB = SnappyDB.with(getContext());
+        assertNotNull(snappyDB);
+        assertNotNull(snappyDB.getKryoInstance());
+
+        snappyDB.put("name", "Jack Reacher");
+        assertEquals("Jack Reacher", snappyDB.get("name"));
+        snappyDB.close();
+        snappyDB.destroy();
+    }
+
+    @SmallTest
+    public void testDefaultBuilderIsSingleton () throws SnappydbException {
+        DB dbInstance1 = SnappyDB.with(getContext());
+        DB dbInstance2 = SnappyDB.with(getContext());
+
+        assertEquals(dbInstance1, dbInstance2);
+
+        dbInstance1.destroy();
+    }
+
+    @SmallTest
+    public void testDefaultBuilder () throws SnappydbException {
+        DB dbInstance = SnappyDB.with(getContext());
+
+        assertTrue(dbInstance.isOpen());
+
+        dbInstance.close();
+
+        assertFalse(dbInstance.isOpen());
+
+        assertTrue(SnappyDB.with(getContext()).isOpen());//create new instance
+
+        SnappyDB.with(getContext()).destroy();
+    }
+
+    @SmallTest
+    public void testCreateDBUsingBuilderWithDefaults () throws SnappydbException  {
+        snappyDB = new SnappyDB.Builder(getContext()).build();
+        assertNotNull(snappyDB);
+
+        snappyDB.close();
+        snappyDB.destroy();
+    }
+
+    @SmallTest
+    public void testCreateDBUsingBuilderWithName () throws SnappydbException  {
+        snappyDB = new SnappyDB.Builder(getContext())
+                        .name("db1")
+                        .build();
+        assertNotNull(snappyDB);
+        assertNotNull(snappyDB.getKryoInstance());
+
+        snappyDB.close();
+        snappyDB.destroy();
+    }
+
+    @SmallTest
+    public void testCreateDBUsingBuilderWithDirectory () throws SnappydbException  {
+        snappyDB = new SnappyDB.Builder(getContext())
+                .directory(getContext().getFilesDir().getAbsolutePath() + File.separator + "dir_db1")
+                .build();
+        assertNotNull(snappyDB);
+        assertNotNull(snappyDB.getKryoInstance());
+        snappyDB.close();
+        snappyDB.destroy();
+    }
+
+    @SmallTest
+    public void testCreateDBUsingBuilderWithNameAndDirectory () throws SnappydbException  {
+        snappyDB = new SnappyDB.Builder(getContext())
+                .name("db1")
+                .directory(getContext().getFilesDir().getAbsolutePath() + File.separator + "dir_db1")
+                .build();
+        assertNotNull(snappyDB);
+        assertNotNull(snappyDB.getKryoInstance());
+
+        snappyDB.close();
+        snappyDB.destroy();
+    }
+
+    @SmallTest
+    public void testCreateDBUsingBuilderWithCustomKryoInstance () throws SnappydbException  {
+        snappyDB = new SnappyDB.Builder(getContext())
+                .registerSerializers(BitSet.class, new BitSetSerializer())
+                .registerSerializers(GregorianCalendar.class, new GregorianCalendarSerializer())
+                .build();
+
+        Serializer bitSetSerializer = snappyDB.getKryoInstance().getRegistration(BitSet.class).getSerializer();
+        Serializer gregorianCalSerializer = snappyDB.getKryoInstance().getRegistration(GregorianCalendar.class).getSerializer();
+
+        assertNotNull(snappyDB);
+        assertNotNull(snappyDB.getKryoInstance());
+
+        assertTrue(bitSetSerializer instanceof BitSetSerializer);
+        assertTrue(gregorianCalSerializer instanceof GregorianCalendarSerializer);
+
+        snappyDB.close();
+        snappyDB.destroy();
+    }
 
     @SmallTest
 	public void testTwoInstance () throws SnappydbException {

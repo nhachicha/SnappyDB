@@ -3,21 +3,34 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.10.1'
+        classpath 'com.android.tools.build:gradle:0.11.+'
     }
 }
 
 apply plugin: 'android-library'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = 'com.snappydb'
+version = '0.3.0-SNAPSHOT'
+ext.packaging = 'aar'
+def artifact_id = 'snappydb-lib'
+def sonatypeRepositoryUrl
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion "19.1.0"
 
-    defaultConfig{
-        minSdkVersion 15
+    defaultConfig {
+        minSdkVersion 9
         targetSdkVersion 19
-        versionCode 101
-        versionName "1.0.1"
+        versionCode 4
+        versionName version
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 
     sourceSets.main {
@@ -29,15 +42,110 @@ android {
 
     // call regular ndk-build script from app directory
     task ndkBuild(type: Exec) {
-            commandLine 'ndk-build', '-C', file('src/main').absolutePath
+        commandLine 'ndk-build', '-C', file('src/main').absolutePath
     }
 
     tasks.withType(JavaCompile) {
         compileTask -> compileTask.dependsOn ndkBuild
     }
 
+    sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+            }
+        }
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('de.javakaffee:kryo-serializers:0.26') {
+        transitive = false
+        exclude group: 'com.esotericsoftware', module: 'kryo'
+    }
+}
+
+task wrapper(type: Wrapper)
+
+
+if (isSnapshotBuild()) {
+    sonatypeRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+} else {
+    sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
+
+
+signing {
+    sign configurations.archives
+}
+
+task androidJavadocs(type: Javadoc) {
+    options {
+        linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
+    }
+    source = android.sourceSets.main.java
+    classpath += project.files(project.android.getBootClasspath().join(File.pathSeparator))
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java
+}
+
+artifacts {
+    archives androidSourcesJar
+    archives androidJavadocsJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            pom.artifactId = artifact_id
+
+            repository(url: sonatypeRepositoryUrl) {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                name 'SnappyDB'
+                description 'A fast and lightweight key/value database for Android'
+                url 'https://github.com/nhachicha/SnappyDB'
+                inceptionYear '2013'
+
+                scm {
+                    url 'https://github.com/nhachicha/SnappyDB'
+                    connection 'scm:git:https://github.com/nhachicha/SnappyDB.git'
+                    developerConnection 'scm:git:https://git@github.com/nhachicha/SnappyDB.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'nhachicha'
+                        name 'Nabil Hachicha'
+                        email 'nabil.hachicha@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+}
+
+def isSnapshotBuild() {
+    return version.contains("SNAPSHOT")
 }

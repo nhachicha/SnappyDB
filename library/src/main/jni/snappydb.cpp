@@ -128,6 +128,18 @@ JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1close(JNIEnv *env,
 	}
 }
 
+
+JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1isOpen
+  (JNIEnv * env, jobject thiz) {
+    LOGI("Is database open");
+
+    if (isDBopen) {
+        return JNI_TRUE;
+    } else {
+        return JNI_FALSE;
+    }
+  }
+
 JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1destroy(
 		JNIEnv * env, jobject thiz, jstring dbpath) {
 

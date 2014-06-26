@@ -175,6 +175,16 @@ JNIEXPORT jfloat JNICALL Java_com_snappydb_internal_DBImpl__1_1getFloat
 JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1exists
   (JNIEnv *, jobject, jstring);
 
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __isOpen
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1isOpen
+  (JNIEnv *, jobject);
+
+
 #ifdef __cplusplus
 }
 #endif

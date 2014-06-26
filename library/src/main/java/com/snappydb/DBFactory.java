@@ -20,47 +20,62 @@ import java.io.File;
 
 import android.content.Context;
 
+import com.esotericsoftware.kryo.Kryo;
 import com.snappydb.internal.DBImpl;
 
 public class DBFactory {
-	private final static String DEFAULT_DBNAME = "snappydb";
+    private final static String DEFAULT_DBNAME = "snappydb";
 
     /**
      * Return the Database with the given folder and name, if it doesn't exist create it
+     *
      * @param folder the folder of the db file will be stored
      * @param dbName database file name
+     * @param kryo optional custom instance of {@link com.esotericsoftware.kryo.Kryo} serializer
      * @return Database handler {@link com.snappydb.DB}
      * @throws SnappydbException
      */
-    public static DB open(String folder, String dbName) throws SnappydbException {
+    public static DB open(String folder, String dbName, Kryo... kryo) throws SnappydbException {
         String dbFilePath = folder + File.separator + dbName;
-        return new DBImpl(dbFilePath);
+        return new DBImpl(dbFilePath, kryo);
+    }
+
+    /**
+     * Return the Database with the given folder and default name, if it doesn't exist create it
+     *
+     * @param folder the folder of the db file will be stored
+     * @param kryo optional custom instance of {@link com.esotericsoftware.kryo.Kryo} serializer
+     * @return Database handler {@link com.snappydb.DB}
+     * @throws SnappydbException
+     */
+    public static DB open(String folder, Kryo... kryo) throws SnappydbException {
+        return open(folder, DEFAULT_DBNAME, kryo);
     }
 
     /**
      * Return the Database with the given name, if it doesn't exist create it
-     * @param ctx context
+     *
+     * @param ctx    context
      * @param dbName database file name
+     * @param kryo optional custom instance of {@link com.esotericsoftware.kryo.Kryo} serializer
      * @return Database handler {@link com.snappydb.DB}
      * @throws SnappydbException
      */
-	public static DB open(Context ctx, String dbName) throws SnappydbException {
-        return open(ctx.getFilesDir().getAbsolutePath(), dbName);
-	}
+    public static DB open(Context ctx, String dbName, Kryo... kryo) throws SnappydbException {
+        return open(ctx.getFilesDir().getAbsolutePath(), dbName, kryo);
+    }
 
     /**
      * Return the Database with the default name {@link com.snappydb.DBFactory#DEFAULT_DBNAME}, if it doesn't exist create it
+     *
      * @param ctx context
+     * @param kryo optional custom instance of {@link com.esotericsoftware.kryo.Kryo} serializer
      * @return Database handler {@link com.snappydb.DB}
      * @throws SnappydbException
      */
-	public static DB open(Context ctx) throws SnappydbException {
-			return open(ctx, DEFAULT_DBNAME);
-	}
+    public static DB open(Context ctx, Kryo... kryo) throws SnappydbException {
+        return open(ctx, DEFAULT_DBNAME, kryo);
+    }
 
-	static {
-		System.loadLibrary("snappydb-native");
-	}
-	
 }
 

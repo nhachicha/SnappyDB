@@ -16,16 +16,20 @@
 
 package com.snappydb;
 
-import java.io.Serializable;
+import com.esotericsoftware.kryo.Kryo;
 
+import java.io.Serializable;
 
 public interface DB {
 	//***********************
 	//*      DB MANAGEMENT
 	//***********************
-	public void close ()  throws SnappydbException;
-	
+
+    public void close ()  throws SnappydbException;
+
 	public void destroy ()  throws SnappydbException;
+
+    public boolean isOpen ()  throws SnappydbException;
 
 	//***********************
 	//*      CREATE
@@ -62,9 +66,9 @@ public interface DB {
 	
 	public byte[] getBytes(String key)  throws SnappydbException;
 	
-	public <T extends Serializable> T get(String key, Class<T> className)  throws SnappydbException;
+	public <T extends Serializable> T get(String key, Class<T> className) throws SnappydbException;
 	
-	public <T extends Serializable> T[] getArray (String key, Class<T> className)  throws SnappydbException;
+	public <T extends Serializable> T[] getArray (String key, Class<T> className) throws SnappydbException;
 	
 	public short getShort(String key)  throws SnappydbException;
 	
@@ -82,5 +86,12 @@ public interface DB {
 	//*      KEYS OPERATIONS 
 	//****************************	
 	public boolean exists (String key) throws SnappydbException;
+
+    //*********************************
+    //*      KRYO SERIALIZATION
+    //*********************************
+
+    // Allow the user to access the Kryo instance, for eventual customization
+    public Kryo getKryoInstance ();
 }
 
