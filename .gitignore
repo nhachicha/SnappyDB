@@ -1,6 +1,7 @@
 *.class
 *.dmp
 *.o
+*.iml
 
 # generated files
 bin/
@@ -8,6 +9,10 @@ gen/
 #libs/
 obj/
 target/
+.gradle
+.idea/
+build/
+local.properties
 
 # OS generated files #
 ######################
