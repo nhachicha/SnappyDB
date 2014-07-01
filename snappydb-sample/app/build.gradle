@@ -17,9 +17,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.snappydb:snappydb-lib:0.3.0'
+    compile ('com.snappydb:snappydb-lib:0.3.2:x86@aar') {
+        // https://code.google.com/p/android/issues/detail?id=64888
+        transitive = true
+    }
 }

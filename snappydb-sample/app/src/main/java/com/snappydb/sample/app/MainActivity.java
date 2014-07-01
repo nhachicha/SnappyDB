@@ -16,7 +16,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         try {
-            DB snappydb = SnappyDB.with(this);
+            DB snappydb = SnappyDB.with(getApplicationContext());
 
             snappydb.put("name", "Jack Reacher");
             snappydb.putInt("age", 42);

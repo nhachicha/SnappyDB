@@ -7,12 +7,13 @@ buildscript {
     }
 }
 
-apply plugin: 'android-library'
+//apply plugin: 'android-library'
+apply plugin: 'android'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.snappydb'
-version = '0.3.0'
+version = '0.3.2'
 ext.packaging = 'aar'
 def artifact_id = 'snappydb-lib'
 def sonatypeRepositoryUrl
@@ -20,6 +21,9 @@ def sonatypeRepositoryUrl
 android {
     compileSdkVersion 19
     buildToolsVersion "19.1.0"
+
+//    publishNonDefault true
+//    defaultPublishConfig "x86Debug"
 
     defaultConfig {
         minSdkVersion 9
@@ -35,19 +39,19 @@ android {
 
     sourceSets.main {
         jniLibs.srcDir 'src/main/libs'
-        jni.srcDirs = [] //disable automatic ndk-build call
+        jni.srcDirs = [] //disable automatic ndk-build call (pretending jni lib is empty:)
     }
 
-    buildTypes.debug.jniDebugBuild true
+//    buildTypes.debug.jniDebugBuild true
 
     // call regular ndk-build script from app directory
-    task ndkBuild(type: Exec) {
-        commandLine 'ndk-build', '-C', file('src/main').absolutePath
-    }
+//    task ndkBuild(type: Exec) {
+//        commandLine 'ndk-build', '-C', file('src/main').absolutePath
+//    }
 
-    tasks.withType(JavaCompile) {
-        compileTask -> compileTask.dependsOn ndkBuild
-    }
+//    tasks.withType(JavaCompile) {
+//        compileTask -> compileTask.dependsOn ndkBuild
+//    }
 
     sourceSets {
         main {
@@ -56,10 +60,61 @@ android {
             }
         }
     }
+
+
+    flavorDimensions "abi"
+
+    productFlavors {
+        x86 {
+            flavorDimension "abi"
+            ndk {
+                abiFilter "x86"
+            }
+            versionCode 3
+        }
+        arm {
+            flavorDimension "abi"
+            ndk {
+                abiFilter "armeabi-v7a"
+            }
+            versionCode 2
+        }
+        all {
+            flavorDimension "abi"
+            versionCode 0
+        }
+    }
+
+//    productFlavors {
+//        x86 {
+//            ndk {
+//                abiFilter "x86"
+//            }
+//        }
+//        mips {
+//            ndk {
+//                abiFilter "mips"
+//            }
+//        }
+//        armv7 {
+//            ndk {
+//                abiFilter "armeabi-v7a"
+//            }
+//        }
+//        arm {
+//            ndk {
+//                abiFilter "armeabi"
+//            }
+//        }
+//
+//        fat
+//    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.esotericsoftware.kryo:kryo:2.24.0'
+
     androidTestCompile('de.javakaffee:kryo-serializers:0.26') {
         transitive = false
         exclude group: 'com.esotericsoftware', module: 'kryo'
@@ -75,6 +130,9 @@ if (isSnapshotBuild()) {
     sonatypeRepositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
 }
 
+sonatypeRepositoryUrl = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+println ">>>>>>>>>>>>>>>>>>>>> REPO <<<<<<<<<<<<<<<<<<<"
+println sonatypeRepositoryUrl
 
 signing {
     sign configurations.archives

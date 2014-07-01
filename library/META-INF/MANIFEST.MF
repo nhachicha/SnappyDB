@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Built-By: 0.10.4
+Created-By: Android Gradle 0.10.4
+
+Name: AndroidManifest.xml
+SHA1-Digest: +Xwf5zwyCpo7wUXQJAhomUqheyI=
+
+Name: META-INF/NOTICE
+SHA1-Digest: 1027OWDFMcr0HNz4tzwn5iHbZYU=
+
+Name: classes.dex
+SHA1-Digest: JhI4TgHGqUVVgvnvpS/2dwls9qw=
+
+Name: META-INF/INDEX.LIST
+SHA1-Digest: nvBRGZAGJFSBbkDtKE9dogbdrNw=
+
+Name: META-INF/LICENSE
+SHA1-Digest: K4uBUimqimHkg/tLoFiLi2xJGJA=
+
+Name: lib/x86/libsnappydb-native.so
+SHA1-Digest: YpzB+GbG21DIfR1MCT8INOVdPuA=
+
