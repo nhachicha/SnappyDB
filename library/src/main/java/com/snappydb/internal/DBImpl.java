@@ -131,7 +131,7 @@ public class DBImpl implements DB {
 
     @Override
     public void putShort(String key, short val) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         __putShort(key, val);
     }
@@ -139,7 +139,7 @@ public class DBImpl implements DB {
 
     @Override
     public void putInt(String key, int val) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         __putInt(key, val);
     }
@@ -147,28 +147,28 @@ public class DBImpl implements DB {
 
     @Override
     public void putBoolean(String key, boolean val) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         __putBoolean(key, val);
     }
 
     @Override
     public void putDouble(String key, double val) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         __putDouble(key, val);
     }
 
     @Override
     public void putFloat(String key, float val) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         __putFloat(key, val);
     }
 
     @Override
     public void putLong(String key, long val) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         __putLong(key, val);
     }
@@ -179,7 +179,7 @@ public class DBImpl implements DB {
 
     @Override
     public void del(String key) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         __del(key);
     }
@@ -245,56 +245,56 @@ public class DBImpl implements DB {
 
     @Override
     public byte[] getBytes(String key) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         return __getBytes(key);
     }
 
     @Override
     public String get(String key) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         return __get(key);
     }
 
     @Override
     public short getShort(String key) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         return __getShort(key);
     }
 
     @Override
     public int getInt(String key) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         return __getInt(key);
     }
 
     @Override
     public boolean getBoolean(String key) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         return __getBoolean(key);
     }
 
     @Override
     public double getDouble(String key) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         return __getDouble(key);
     }
 
     @Override
     public long getLong(String key) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         return __getLong(key);
     }
 
     @Override
     public float getFloat(String key) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         return __getFloat(key);
     }
@@ -304,9 +304,24 @@ public class DBImpl implements DB {
     //****************************
     @Override
     public boolean exists(String key) throws SnappydbException {
-        checkArgs(key);
+        checkKey(key);
 
         return __exists(key);
+    }
+
+    @Override
+    public String[] findKeys(String prefix) throws SnappydbException {
+        checkPrefix(prefix);
+
+        return __findKeys(prefix);
+    }
+
+    @Override
+    public String[] findKeysBetween(String startPrefix, String endPrefix)
+            throws SnappydbException {
+        checkRange(startPrefix, endPrefix);
+
+        return __findKeysBetween(startPrefix, endPrefix);
     }
 
     //*********************************
@@ -322,21 +337,33 @@ public class DBImpl implements DB {
     // *      UTILS
     // ***********************
 
-    private void checkArgs(String key, Object value) throws SnappydbException {
-        if (TextUtils.isEmpty(key)) {
-            throw new SnappydbException("Key must not be empty");
-        }
+    private void checkArgs (String key, Object value) throws SnappydbException {
+        checkArgNotEmpty (key, "Key must not be empty");
 
         if (null == value) {
-            throw new SnappydbException("Value must not be empty");
+            throw new SnappydbException ("Value must not be empty");
         }
     }
 
-    private void checkArgs(String key) throws SnappydbException {
-        if (TextUtils.isEmpty(key)) {
-            throw new SnappydbException("Key must not be empty");
+    private void checkPrefix (String prefix) throws SnappydbException {
+        checkArgNotEmpty (prefix, "Starting prefix must not be empty");
+    }
+
+    private void checkRange (String startPrefix, String endPrefix) throws SnappydbException {
+        checkArgNotEmpty (startPrefix, "Starting prefix must not be empty");
+        checkArgNotEmpty (startPrefix, "Ending prefix must not be empty");
+    }
+
+    private void checkKey (String key) throws SnappydbException {
+        checkArgNotEmpty (key, "Key must not be empty");
+    }
+
+    private void checkArgNotEmpty (String arg, String errorMsg) throws SnappydbException {
+        if (TextUtils.isEmpty(arg)) {
+            throw new SnappydbException (errorMsg);
         }
     }
+
 
     // native code
     private native void __close();
@@ -383,4 +410,7 @@ public class DBImpl implements DB {
 
     private native boolean __exists(String key) throws SnappydbException;
 
+    private native String[] __findKeys (String prefix) throws SnappydbException;
+
+    private native String[] __findKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
 }

@@ -33,6 +33,14 @@ JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1destroy
 
 /*
  * Class:     com_snappydb_internal_DBImpl
+ * Method:    __isOpen
+ * Signature: ()Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1isOpen
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
  * Method:    __put
  * Signature: (Ljava/lang/String;[B)V
  */
@@ -175,15 +183,21 @@ JNIEXPORT jfloat JNICALL Java_com_snappydb_internal_DBImpl__1_1getFloat
 JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1exists
   (JNIEnv *, jobject, jstring);
 
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __findKeys
+ * Signature: (Ljava/lang/String;)[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
+  (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     com_snappydb_internal_DBImpl
- * Method:    __isOpen
- * Signature: ()Z
+ * Method:    __findKeysBetween
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;
  */
-JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1isOpen
-  (JNIEnv *, jobject);
-
+JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBetween
+  (JNIEnv *, jobject, jstring, jstring);
 
 #ifdef __cplusplus
 }

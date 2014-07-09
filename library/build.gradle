@@ -56,6 +56,126 @@ android {
             }
         }
     }
+
+    productFlavors {
+        x86 {
+            ndk {
+                abiFilter "x86"
+            }
+        }
+        mips {
+            ndk {
+                abiFilter "mips"
+            }
+        }
+        armv7 {
+            ndk {
+                abiFilter "armeabi-v7a"
+            }
+        }
+        arm {
+            ndk {
+                abiFilter "armeabi"
+            }
+        }
+    }
+
+
+    def abiExclude = [arm:         ["armeabi-v7a", "x86", "mips"],
+                      armv7:       ["armeabi", "x86", "mips"],
+                      x86:         ["armeabi-v7a", "armeabi", "mips"],
+                      mips:        ["armeabi-v7a", "armeabi", "x86"]
+                      ]
+
+    def jniLibMapToDelete = [:]
+    android.productFlavors.each { flavor  ->
+        android.buildTypes.each { build->
+                def exclusionList = []
+                abiExclude["${flavor.name}"].each { abiFilter ->
+                    exclusionList << new File("$buildDir/bundles/${flavor.name}/${build.name}/jni/$abiFilter")
+                }
+                jniLibMapToDelete["${flavor.name}_${build.name}"] = exclusionList
+        }
+    }
+
+    task ("cleanJniX86Debug") {
+        doLast {
+            jniLibMapToDelete.x86_debug.each { dir ->
+                dir.deleteDir()
+            }
+        }
+    }
+
+    task ("cleanJniX86Release") {
+        doLast {
+            jniLibMapToDelete.x86_release.each { dir ->
+                dir.deleteDir()
+            }
+        }
+    }
+
+    task ("cleanJniMipsDebug") {
+        doLast {
+            jniLibMapToDelete.mips_debug.each { dir ->
+                dir.deleteDir()
+            }
+        }
+    }
+
+    task ("cleanJniMipsRelease") {
+        doLast {
+            jniLibMapToDelete.mips_release.each { dir ->
+                dir.deleteDir()
+            }
+        }
+    }
+
+    task ("cleanJniArmDebug") {
+        doLast {
+            jniLibMapToDelete.arm_debug.each { dir ->
+                dir.deleteDir()
+            }
+        }
+    }
+
+    task ("cleanJniArmRelease") {
+        doLast {
+            jniLibMapToDelete.arm_release.each { dir ->
+                dir.deleteDir()
+            }
+        }
+    }
+
+    task ("cleanJniArmv7Debug") {
+        doLast {
+            jniLibMapToDelete.armv7_debug.each { dir ->
+                dir.deleteDir()
+            }
+        }
+    }
+
+    task ("cleanJniArmv7Release") {
+        doLast {
+            jniLibMapToDelete.armv7_release.each { dir ->
+                dir.deleteDir()
+            }
+        }
+    }
+
+    project.afterEvaluate {
+        project.tasks.findByName('packageX86DebugLocalJar').dependsOn cleanJniX86Debug
+        project.tasks.findByName('packageX86ReleaseLocalJar').dependsOn cleanJniX86Release
+
+        project.tasks.findByName('packageMipsDebugLocalJar').dependsOn cleanJniMipsDebug
+        project.tasks.findByName('packageMipsReleaseLocalJar').dependsOn cleanJniMipsRelease
+
+        project.tasks.findByName('packageArmDebugLocalJar').dependsOn cleanJniArmDebug
+        project.tasks.findByName('packageArmReleaseLocalJar').dependsOn cleanJniArmRelease
+
+        project.tasks.findByName('packageArmv7DebugLocalJar').dependsOn cleanJniArmv7Debug
+        project.tasks.findByName('packageArmv7ReleaseLocalJar').dependsOn cleanJniArmv7Release
+    }
+
 }
 
 dependencies {

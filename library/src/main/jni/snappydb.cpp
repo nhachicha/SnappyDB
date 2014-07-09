@@ -19,6 +19,7 @@
 #include <string.h>
 #include <sstream>
 #include <iomanip>
+#include <vector>
 #include <stdlib.h>
 #include "com_snappydb_internal_DBImpl.h"
 #include "leveldb/db.h"
@@ -737,6 +738,84 @@ JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1exists
 		throwException(env, err.c_str());
 		return NULL;
 	}
+}
+
+
+JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
+  (JNIEnv *env, jobject thiz, jstring jPrefix) {
+
+	LOGI("find keys");
+
+	if (!isDBopen) {
+		throwException (env, "database is not open");
+		return NULL;
+	}
+
+	const char* prefix = env->GetStringUTFChars(jPrefix, 0);
+
+	std::vector<std::string> result;
+	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
+
+	for (it->Seek(prefix); it->Valid() && it->key().starts_with(prefix);
+			it->Next()) {
+		result.push_back(it->key().ToString());
+	}
+
+	std::vector<std::string>::size_type n = result.size();
+	jobjectArray ret= (jobjectArray)env->NewObjectArray(n,
+		         env->FindClass("java/lang/String"),
+		         env->NewStringUTF(""));
+
+	jstring str;
+	for (int i=0; i<n ; i++) {
+		str = env->NewStringUTF(result[i].c_str());
+		env->SetObjectArrayElement(ret, i, str);
+		env->DeleteLocalRef(str);
+	}
+
+	env->ReleaseStringUTFChars(jPrefix, prefix);
+	delete it;
+
+	return ret;
+}
+
+JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBetween
+  (JNIEnv *env, jobject thiz, jstring jStartPrefix, jstring jEndPrefix)  {
+
+	LOGI("find keys between range");
+
+	if (!isDBopen) {
+		throwException (env, "database is not open");
+		return NULL;
+	}
+
+	const char* startPrefix = env->GetStringUTFChars(jStartPrefix, 0);
+	const char* endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
+
+	std::vector<std::string> result;
+	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
+
+	for (it->Seek(startPrefix); it->Valid() && it->key().compare(endPrefix) < 0; it->Next()) {
+		result.push_back(it->key().ToString());
+	}
+
+	std::vector<std::string>::size_type n = result.size();
+	jobjectArray ret= (jobjectArray)env->NewObjectArray(n,
+		         env->FindClass("java/lang/String"),
+		         env->NewStringUTF(""));
+
+	jstring str;
+	for (int i=0; i<n ; i++) {
+		str = env->NewStringUTF(result[i].c_str());
+		env->SetObjectArrayElement(ret, i, str);
+		env->DeleteLocalRef(str);
+	}
+
+	env->ReleaseStringUTFChars(jStartPrefix, startPrefix);
+	env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+	delete it;
+
+	return ret;
 }
 
 

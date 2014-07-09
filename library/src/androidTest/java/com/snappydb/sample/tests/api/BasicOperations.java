@@ -536,4 +536,156 @@ public class BasicOperations extends AndroidTestCase {
         snappyDB.close();
         snappyDB.destroy();
     }
+
+    public void testKeyRange () throws SnappydbException {
+        snappyDB = DBFactory.open(getContext(), dbName);
+
+        snappyDB.put("key:cat1:subcatg1", "value:cat1:subcatg1");
+        snappyDB.put("key:cat1:subcatg2", "value:cat1:subcatg2");
+        snappyDB.put("key:cat1:subcatg3", "value:cat1:subcatg3");
+
+        snappyDB.put("key:cat2:subcatg1", "value:cat2:subcatg1");
+        snappyDB.put("key:cat2:subcatg2", "value:cat2:subcatg2");
+        snappyDB.put("key:cat2:subcatg3", "value:cat2:subcatg3");
+
+        snappyDB.put("key:cat3:subcatg1", "value:cat3:subcatg1");
+        snappyDB.put("key:cat3:subcatg2", "value:cat3:subcatg2");
+        snappyDB.put("key:cat3:subcatg3", "value:cat3:subcatg3");
+
+        // return all keys starting with "key" 9
+        String [] keys = snappyDB.findKeys("key");
+        assertEquals(9, keys.length);
+        //suppose the result is sorted
+        assertEquals("key:cat1:subcatg1", keys[0]);
+        assertEquals(true, snappyDB.exists("key:cat1:subcatg1"));
+
+        assertEquals("key:cat1:subcatg2", keys[1]);
+        assertEquals(true, snappyDB.exists("key:cat1:subcatg2"));
+
+        assertEquals("key:cat1:subcatg3", keys[2]);
+        assertEquals(true, snappyDB.exists("key:cat1:subcatg3"));
+
+        assertEquals("key:cat2:subcatg1", keys[3]);
+        assertEquals(true, snappyDB.exists("key:cat2:subcatg1"));
+
+        assertEquals("key:cat2:subcatg2", keys[4]);
+        assertEquals(true, snappyDB.exists("key:cat2:subcatg2"));
+
+        assertEquals("key:cat2:subcatg3", keys[5]);
+        assertEquals(true, snappyDB.exists("key:cat2:subcatg3"));
+
+        assertEquals("key:cat3:subcatg1", keys[6]);
+        assertEquals(true, snappyDB.exists("key:cat3:subcatg1"));
+
+        assertEquals("key:cat3:subcatg2", keys[7]);
+        assertEquals(true, snappyDB.exists("key:cat3:subcatg2"));
+
+        assertEquals("key:cat3:subcatg3", keys[8]);
+        assertEquals(true, snappyDB.exists("key:cat3:subcatg3"));
+
+
+        //return all keys starting with"key:cat" 9
+        keys = snappyDB.findKeys("key:cat");
+        assertEquals(9, keys.length);
+        assertEquals("key:cat1:subcatg1", keys[0]);
+        assertEquals("key:cat1:subcatg2", keys[1]);
+        assertEquals("key:cat1:subcatg3", keys[2]);
+        assertEquals("key:cat2:subcatg1", keys[3]);
+        assertEquals("key:cat2:subcatg2", keys[4]);
+        assertEquals("key:cat2:subcatg3", keys[5]);
+        assertEquals("key:cat3:subcatg1", keys[6]);
+        assertEquals("key:cat3:subcatg2", keys[7]);
+        assertEquals("key:cat3:subcatg3", keys[8]);
+
+        keys = snappyDB.findKeys("key:");
+        assertEquals(9, keys.length);
+        assertEquals("key:cat1:subcatg1", keys[0]);
+        assertEquals("key:cat1:subcatg2", keys[1]);
+        assertEquals("key:cat1:subcatg3", keys[2]);
+        assertEquals("key:cat2:subcatg1", keys[3]);
+        assertEquals("key:cat2:subcatg2", keys[4]);
+        assertEquals("key:cat2:subcatg3", keys[5]);
+        assertEquals("key:cat3:subcatg1", keys[6]);
+        assertEquals("key:cat3:subcatg2", keys[7]);
+        assertEquals("key:cat3:subcatg3", keys[8]);
+
+        //return all keys starting with"key:cat1" 3
+        keys = snappyDB.findKeys("key:cat1");
+        assertEquals(3, keys.length);
+        assertEquals("key:cat1:subcatg1", keys[0]);
+        assertEquals("key:cat1:subcatg2", keys[1]);
+        assertEquals("key:cat1:subcatg3", keys[2]);
+
+
+//		//return all keys starting with"key:cat2" 3
+        keys = snappyDB.findKeys("key:cat2");
+        assertEquals(3, keys.length);
+        assertEquals("key:cat2:subcatg1", keys[0]);
+        assertEquals("key:cat2:subcatg2", keys[1]);
+        assertEquals("key:cat2:subcatg3", keys[2]);
+
+//		//return all keys starting with"key:cat3" 3
+        keys = snappyDB.findKeys("key:cat3");
+        assertEquals(3, keys.length);
+        assertEquals("key:cat3:subcatg1", keys[0]);
+        assertEquals("key:cat3:subcatg2", keys[1]);
+        assertEquals("key:cat3:subcatg3", keys[2]);
+
+//
+//		//return all keys starting with"key:cat1:" 3
+        keys = snappyDB.findKeys("key:cat1:");
+        assertEquals(3, keys.length);
+        assertEquals("key:cat1:subcatg1", keys[0]);
+        assertEquals("key:cat1:subcatg2", keys[1]);
+        assertEquals("key:cat1:subcatg3", keys[2]);
+
+        keys = snappyDB.findKeys("key:cat1:sub");
+        assertEquals(3, keys.length);
+        assertEquals("key:cat1:subcatg1", keys[0]);
+        assertEquals("key:cat1:subcatg2", keys[1]);
+        assertEquals("key:cat1:subcatg3", keys[2]);
+
+        //return all keys starting with"key:cat2:subcatg" 3
+        keys = snappyDB.findKeys("key:cat2:subcatg");
+        assertEquals(3, keys.length);
+        assertEquals("key:cat2:subcatg1", keys[0]);
+        assertEquals("key:cat2:subcatg2", keys[1]);
+        assertEquals("key:cat2:subcatg3", keys[2]);
+
+        //return all keys starting with"key:cat3:subcatg" 3
+        keys = snappyDB.findKeys("key:cat3:subcatg");
+        assertEquals(3, keys.length);
+        assertEquals("key:cat3:subcatg1", keys[0]);
+        assertEquals("key:cat3:subcatg2", keys[1]);
+        assertEquals("key:cat3:subcatg3", keys[2]);
+
+
+        keys = snappyDB.findKeys("UNDEFINED_KEY");
+        assertEquals(0, keys.length);
+
+        keys = snappyDB.findKeys("key:xxx");
+        assertEquals(0, keys.length);
+
+        keys = snappyDB.findKeys("xxx:key");
+        assertEquals(0, keys.length);
+
+        keys = snappyDB.findKeys("key:cat1:subcategory");
+        assertEquals(0, keys.length);
+
+        // return all keys starting between [arg1, arg2)
+        keys = snappyDB.findKeysBetween("key:cat1:subcatg1", "key:cat1:subcatg3");
+        assertEquals(2, keys.length);
+        assertEquals("key:cat1:subcatg1", keys[0]);
+        assertEquals("key:cat1:subcatg2", keys[1]);
+
+        keys = snappyDB.findKeysBetween("key:cat1:", "key:cat2:subcatg2");
+        assertEquals(4, keys.length);
+        assertEquals("key:cat1:subcatg1", keys[0]);
+        assertEquals("key:cat1:subcatg2", keys[1]);
+        assertEquals("key:cat1:subcatg3", keys[2]);
+        assertEquals("key:cat2:subcatg1", keys[3]);
+
+        snappyDB.destroy();
+    }
+
 }
