@@ -4,7 +4,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.snappydb'
-version = '0.3.11'
+version = '0.4.0'
 ext.packaging = 'aar'
 def artifact_id = 'snappydb-lib'
 def sonatypeRepositoryUrl
@@ -34,7 +34,6 @@ android {
 
     // call regular ndk-build script from app directory
     task ndkBuild(type: Exec) {
-        println "TRYING TO COMPILE: " + file('src/main/jni/').absolutePath
         commandLine 'ndk-build', '-C', file('src/main/jni/').absolutePath
     }
 

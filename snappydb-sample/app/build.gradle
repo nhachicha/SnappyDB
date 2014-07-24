@@ -1,4 +1,4 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 19
@@ -41,12 +41,15 @@ android {
                 abiFilter "armeabi"
             }
         }
-        phat
+        fat
     }
 }
 
 dependencies {
-    //compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.snappydb:snappydb-lib:0.3.11'
+    compile 'com.snappydb:snappydb-lib:0.4.+'
     compile 'com.esotericsoftware.kryo:kryo:2.24.0'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.12'
 }
