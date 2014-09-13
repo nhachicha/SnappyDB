@@ -30,11 +30,13 @@ android {
         jni.srcDirs = [] //disable automatic ndk-build call
     }
 
-    buildTypes.debug.jniDebugBuild true
+    buildTypes.debug.jniDebugBuild !false
 
     // call regular ndk-build script from app directory
     task ndkBuild(type: Exec) {
-        commandLine 'ndk-build', '-C', file('src/main/jni/').absolutePath
+        commandLine "${getNdkPath()}/ndk-build", '-C', file('src/main/jni/').absolutePath
+//        println "$System.env.ANDROID_NDK_HOME/ndk-build -C ${file('src/main/jni/').absolutePath}"
+//        "$System.env.ANDROID_NDK_HOME/ndk-build -C ${file('src/main/jni/').absolutePath}".execute().text
     }
 
     tasks.withType(JavaCompile) {
@@ -48,7 +50,7 @@ android {
             }
         }
     }
-
+//
 }
 
 dependencies {
@@ -150,4 +152,8 @@ uploadArchives {
 
 def isSnapshotBuild() {
     return version.contains("SNAPSHOT")
+}
+
+def getNdkPath () {
+    System.env.ANDROID_NDK_HOME?:"/Android/android-ndk-r9"
 }

@@ -41,6 +41,10 @@ public interface DB {
 	public void put (String key, Serializable value) throws SnappydbException;
 	
 	public void put (String key, Serializable [] value) throws SnappydbException;
+
+    public void put (String key, Object object) throws SnappydbException;
+
+    public void put (String key, Object [] object) throws SnappydbException;
 	
 	public void putInt (String key, int val) throws SnappydbException;
 	
@@ -67,8 +71,12 @@ public interface DB {
 	public byte[] getBytes(String key)  throws SnappydbException;
 	
 	public <T extends Serializable> T get(String key, Class<T> className) throws SnappydbException;
-	
+
+    public <T> T getObject(String key, Class<T> className) throws SnappydbException;
+
 	public <T extends Serializable> T[] getArray (String key, Class<T> className) throws SnappydbException;
+
+    public <T> T[] getObjectArray (String key, Class<T> className) throws SnappydbException;
 	
 	public short getShort(String key)  throws SnappydbException;
 	

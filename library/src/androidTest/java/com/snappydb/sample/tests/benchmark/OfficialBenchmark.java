@@ -25,6 +25,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.test.AndroidTestCase;
 import android.test.RenamingDelegatingContext;
+import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 
 import com.snappydb.DB;
@@ -36,6 +37,7 @@ import com.snappydb.sample.tests.api.helper.SimpleDatabase;
 public class OfficialBenchmark extends AndroidTestCase {
     private final static String TAG = "BENCHMARK";
 
+    @LargeTest
     // 1000 insert of 100 byte ==> 100 000 bytes
     public void testReferenceSetup() throws SnappydbException, UnsupportedEncodingException {
 

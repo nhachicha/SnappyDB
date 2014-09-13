@@ -102,6 +102,26 @@ public class DBImpl implements DB {
     }
 
     @Override
+    public void put(String key, Object value) throws SnappydbException {
+        checkArgs(key, value);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        kryo.register(value.getClass());
+
+        Output output = new Output(stream);
+        try {
+            kryo.writeObject(output, value);
+            output.close();
+
+            __put(key, stream.toByteArray());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SnappydbException(e.getMessage());
+        }
+    }
+
+    @Override
     public void put(String key, byte[] value) throws SnappydbException {
         checkArgs(key, value);
 
@@ -111,6 +131,26 @@ public class DBImpl implements DB {
 
     @Override
     public void put(String key, Serializable[] value) throws SnappydbException {
+        checkArgs(key, value);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        kryo.register(value.getClass());
+
+        Output output = new Output(stream);
+        try {
+            kryo.writeObject(output, value);
+            output.close();
+
+            __put(key, stream.toByteArray());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SnappydbException("Kryo exception " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void put(String key, Object[] value) throws SnappydbException {
         checkArgs(key, value);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -203,20 +243,46 @@ public class DBImpl implements DB {
         kryo.register(className);
 
         Input input = new Input(data);
-        Object obj = null;
         try {
-            obj = kryo.readObject(input, className);
-            return className.cast(obj);
+            return kryo.readObject(input, className);
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new SnappydbException("Maybe you tried to retrive an array using this method ? " +
+            throw new SnappydbException("Maybe you tried to retrieve an array using this method ? " +
                     "please use getArray instead " + e.getMessage());
         } finally {
             input.close();
         }
     }
 
+    @Override
+    public <T> T getObject (String key, Class<T> className)
+            throws SnappydbException {
+        checkArgs(key, className);
+
+        if (className.isArray()) {
+            throw new SnappydbException(
+                    "You should call getObjectArray instead");
+        }
+
+        byte[] data = getBytes(key);
+
+        kryo.register(className);
+
+        Input input = new Input(data);
+        try {
+            return kryo.readObject(input, className);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SnappydbException("Maybe you tried to retrieve an array using this method ? " +
+                    "please use getObjectArray instead " + e.getMessage());
+        } finally {
+            input.close();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public <T extends Serializable> T[] getArray(String key, Class<T> className)
             throws SnappydbException {
@@ -227,12 +293,35 @@ public class DBImpl implements DB {
         kryo.register(className);
 
         Input input = new Input(data);
-        T[] obj = null;
         T[] array = (T[]) Array.newInstance(className, 0);
 
         try {
-            obj = (T[]) kryo.readObject(input, array.getClass());
-            return obj;
+            return (T[]) kryo.readObject(input, array.getClass());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SnappydbException("Maybe you tried to retrieve an array using this method " +
+                    "? please use getArray instead " + e.getMessage());
+        } finally {
+            input.close();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T[] getObjectArray(String key, Class<T> className)
+            throws SnappydbException {
+        checkArgs(key, className);
+
+        byte[] data = __getBytes(key);
+
+        kryo.register(className);
+
+        Input input = new Input(data);
+        T[] array = (T[]) Array.newInstance(className, 0);
+
+        try {
+            return (T[]) kryo.readObject(input, array.getClass());
 
         } catch (Exception e) {
             e.printStackTrace();

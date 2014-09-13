@@ -1,1 +1,2 @@
-include ':library'
+include ':library', ':app'
+project(':app').projectDir = new File('snappydb-snippets/app')

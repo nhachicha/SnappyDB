@@ -19,11 +19,16 @@ package com.snappydb.sample.tests.api;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 import com.snappydb.DB;
 import com.snappydb.DBFactory;
 import com.snappydb.SnappyDB;
 import com.snappydb.SnappydbException;
+import com.snappydb.sample.tests.api.helper.Book;
+import com.snappydb.sample.tests.api.helper.Employee;
 import com.snappydb.sample.tests.api.helper.MyCustomObject;
 import com.snappydb.sample.tests.api.helper.MyCustomObjectSerializer;
 
@@ -56,9 +61,9 @@ public class BasicOperations extends AndroidTestCase {
         MyCustomObject customObject = new MyCustomObject("value");
 
         snappyDB = new SnappyDB.Builder(getContext())
-                        .directory(path)
-                        .registerSerializers(MyCustomObject.class, new MyCustomObjectSerializer())
-                        .build();
+                .directory(path)
+                .registerSerializers(MyCustomObject.class, new MyCustomObjectSerializer())
+                .build();
 
         snappyDB.put("customObject", customObject);
         snappyDB.close();
@@ -95,7 +100,7 @@ public class BasicOperations extends AndroidTestCase {
         snappyDB.close();
         snappyDB.destroy();
     }
-    
+
     @SmallTest
     public void testCreateDBUsingDefaultBuilder() throws SnappydbException {
         snappyDB = SnappyDB.with(getContext());
@@ -537,7 +542,7 @@ public class BasicOperations extends AndroidTestCase {
         snappyDB.destroy();
     }
 
-    public void testKeyRange () throws SnappydbException {
+    public void testKeyRange() throws SnappydbException {
         snappyDB = DBFactory.open(getContext(), dbName);
 
         snappyDB.put("key:cat1:subcatg1", "value:cat1:subcatg1");
@@ -553,7 +558,7 @@ public class BasicOperations extends AndroidTestCase {
         snappyDB.put("key:cat3:subcatg3", "value:cat3:subcatg3");
 
         // return all keys starting with "key" 9
-        String [] keys = snappyDB.findKeys("key");
+        String[] keys = snappyDB.findKeys("key");
         assertEquals(9, keys.length);
         //suppose the result is sorted
         assertEquals("key:cat1:subcatg1", keys[0]);
@@ -674,18 +679,139 @@ public class BasicOperations extends AndroidTestCase {
 
         // return all keys starting between [arg1, arg2)
         keys = snappyDB.findKeysBetween("key:cat1:subcatg1", "key:cat1:subcatg3");
-        assertEquals(2, keys.length);
+        assertEquals(3, keys.length);
         assertEquals("key:cat1:subcatg1", keys[0]);
         assertEquals("key:cat1:subcatg2", keys[1]);
+        assertEquals("key:cat1:subcatg3", keys[2]);
 
         keys = snappyDB.findKeysBetween("key:cat1:", "key:cat2:subcatg2");
-        assertEquals(4, keys.length);
+        assertEquals(5, keys.length);
         assertEquals("key:cat1:subcatg1", keys[0]);
         assertEquals("key:cat1:subcatg2", keys[1]);
         assertEquals("key:cat1:subcatg3", keys[2]);
         assertEquals("key:cat2:subcatg1", keys[3]);
+        assertEquals("key:cat2:subcatg2", keys[4]);
+
+
+        snappyDB.put("android:03", "Cupcake");// adding 0 to maintain the lexicographical order
+        snappyDB.put("android:04", "Donut");
+        snappyDB.put("android:05", "Eclair");
+        snappyDB.put("android:08", "Froyo");
+        snappyDB.put("android:09", "Gingerbread");
+        snappyDB.put("android:11", "Honeycomb");
+        snappyDB.put("android:14", "Ice Cream Sandwich");
+        snappyDB.put("android:16", "Jelly Bean");
+        snappyDB.put("android:19", "KitKat");
+
+        keys = snappyDB.findKeys("android");
+        assertEquals(9, keys.length);
+
+        keys = snappyDB.findKeys("android:0");
+        assertEquals(5, keys.length);
+
+        assertEquals("Cupcake", snappyDB.get(keys[0]));
+        assertEquals("Donut", snappyDB.get(keys[1]));
+        assertEquals("Eclair", snappyDB.get(keys[2]));
+        assertEquals("Froyo", snappyDB.get(keys[3]));
+        assertEquals("Gingerbread", snappyDB.get(keys[4]));
+
+        keys = snappyDB.findKeys("android:1");
+        assertEquals(4, keys.length);
+
+        assertEquals("Honeycomb", snappyDB.get(keys[0]));
+        assertEquals("Ice Cream Sandwich", snappyDB.get(keys[1]));
+        assertEquals("Jelly Bean", snappyDB.get(keys[2]));
+        assertEquals("KitKat", snappyDB.get(keys[3]));
+
+        // 1 case FROM & TO exists
+        keys = snappyDB.findKeysBetween("android:08", "android:11");
+        assertEquals(3, keys.length);
+        assertEquals("android:08", keys[0]);
+        assertEquals("android:09", keys[1]);
+        assertEquals("android:11", keys[2]);
+
+        // 2 case FROM exist but not TO
+        keys = snappyDB.findKeysBetween("android:05", "android:10");
+        assertEquals(3, keys.length);
+        assertEquals("android:05", keys[0]);
+        assertEquals("android:08", keys[1]);
+        assertEquals("android:09", keys[2]);
+
+        // 3 case FROM doesn't exist but TO exist
+        keys = snappyDB.findKeysBetween("android:07", "android:09");
+        assertEquals(2, keys.length);
+        assertEquals("android:08", keys[0]);
+        assertEquals("android:09", keys[1]);
+
+        // 4 case FROM & TO doesn't exists
+        keys = snappyDB.findKeysBetween("android:13", "android:99");
+        assertEquals(3, keys.length);
+        assertEquals("android:14", keys[0]);
+        assertEquals("android:16", keys[1]);
+        assertEquals("android:19", keys[2]);
 
         snappyDB.destroy();
     }
 
+    @SmallTest
+    public void testCustomKryoSerializer() throws SnappydbException {
+        snappyDB = DBFactory.open(getContext(), dbName);
+        snappyDB.getKryoInstance().register(Employee.class, new Serializer<Employee>() {
+
+            @Override
+            public void write(Kryo kryo, Output output, Employee object) {
+                output.writeString(object.getZipCode());
+                output.writeString(object.getName());
+            }
+
+            @Override
+            public Employee read(Kryo kryo, Input input, Class<Employee> type) {
+                Employee emp = new Employee(input.readString(), input.readString());
+                return emp;
+            }
+        });
+
+        Employee employee = new Employee("W1F 8HT", "Nabil Hachicha");
+        snappyDB.put("employee", employee);
+
+        Employee empl = snappyDB.getObject("employee", Employee.class);
+
+        assertNotNull(empl);
+        assertEquals("W1F 8HT", empl.getZipCode());
+        assertEquals("Nabil Hachicha", empl.getName());
+        snappyDB.destroy();
+    }
+
+    @SmallTest
+    public void testObject() throws SnappydbException {
+        snappyDB = DBFactory.open(getContext(), dbName);
+        Book book = new Book("Echo Burning", "0-399-14726-8");
+
+        snappyDB.put("book", book);
+
+        Book myBook = snappyDB.getObject("book", Book.class);
+
+        assertNotNull(myBook);
+        assertEquals(book, myBook);
+    }
+
+    @SmallTest
+    public void testObjectArray() throws SnappydbException {
+        snappyDB = DBFactory.open(getContext(), dbName);
+        Book[] books = new Book[3];
+        books[0] = new Book("Echo Burning", "0-399-14726-8");
+        books[0] = new Book("Nothing To Lose", "0-593-05702-3");
+        books[0] = new Book("61 Hours", "978-0-593-05706-3");
+
+        snappyDB.put("books", books);
+
+        Book[] collection = snappyDB.getObjectArray("books", Book.class);
+
+        assertNotNull(collection);
+        assertEquals(books.length, collection.length);
+        assertEquals(books[0], collection[0]);
+        assertEquals(books[1], collection[1]);
+        assertEquals(books[2], collection[2]);
+
+    }
 }

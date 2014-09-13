@@ -795,8 +795,9 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBet
 	std::vector<std::string> result;
 	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
 
-	for (it->Seek(startPrefix); it->Valid() && it->key().compare(endPrefix) < 0; it->Next()) {
+	for (it->Seek(startPrefix); it->Valid() && it->key().compare(endPrefix) <= 0; it->Next()) {
 		result.push_back(it->key().ToString());
+
 	}
 
 	std::vector<std::string>::size_type n = result.size();
