@@ -49,7 +49,6 @@ public class CustomKryoSerializationSnippetActivity extends AbsBaseSnippetActivi
         return new PrimitiveOperationSnippetFragment();
     }
 
-    // Business Logic
     public static class PrimitiveOperationSnippetFragment extends BaseExecutionFragment implements View.OnClickListener, Serializable {
         private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM HH:mm:ss");
         private WeakReference<EditText> mName, mKey;

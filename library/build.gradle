@@ -35,8 +35,6 @@ android {
     // call regular ndk-build script from app directory
     task ndkBuild(type: Exec) {
         commandLine "${getNdkPath()}/ndk-build", '-C', file('src/main/jni/').absolutePath
-//        println "$System.env.ANDROID_NDK_HOME/ndk-build -C ${file('src/main/jni/').absolutePath}"
-//        "$System.env.ANDROID_NDK_HOME/ndk-build -C ${file('src/main/jni/').absolutePath}".execute().text
     }
 
     tasks.withType(JavaCompile) {
@@ -50,7 +48,6 @@ android {
             }
         }
     }
-//
 }
 
 dependencies {
