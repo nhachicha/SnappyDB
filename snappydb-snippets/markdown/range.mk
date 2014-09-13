@@ -43,7 +43,7 @@ assertEquals("android:09", keys[1]);
 assertEquals("android:11", keys[2]);
 ```
 
-+ `FROM` key exist, but not the `TO
++ 'FROM' key exist, but not the `TO
 ```java
 keys = snappyDB.findKeysBetween("android:05", "android:10");
 assertEquals(3, keys.length);
