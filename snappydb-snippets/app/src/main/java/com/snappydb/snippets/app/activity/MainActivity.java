@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.ExpandableListView;
 
+import com.crashlytics.android.Crashlytics;
 import com.snappydb.snippets.app.R;
 import com.snappydb.snippets.app.adapter.ExpandableListAdapter;
 import com.snappydb.snippets.app.model.Snippet;
@@ -42,6 +43,8 @@ public class MainActivity extends ActionBarActivity implements ExpandableListAda
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        Crashlytics.start(this);
 
         TreeMap<String, ArrayList<Snippet>> snippets = SnippetsFactory.INSTANCE.getSnippets();
 

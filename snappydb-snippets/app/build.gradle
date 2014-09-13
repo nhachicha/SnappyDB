@@ -1,4 +1,21 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'http://download.crashlytics.com/maven' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.1'
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+    }
+}
+
+repositories {
+    jcenter()
+    maven { url 'http://download.crashlytics.com/maven' }
+}
+
 apply plugin: 'com.android.application'
+apply plugin: 'crashlytics'
 
 android {
     compileSdkVersion 19
@@ -12,10 +29,16 @@ android {
         versionName "1.0"
     }
 
+    signingConfigs {
+        release {
+        }
+    }
+
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
@@ -26,10 +49,30 @@ android {
 }
 
 dependencies {
-    compile 'com.snappydb:snappydb-lib:0.4.+'
+    compile 'com.snappydb:snappydb-lib:0.4.0'
     compile 'com.esotericsoftware.kryo:kryo:2.24.0'
     compile 'com.android.support:appcompat-v7:20.0.0'
+    compile 'com.crashlytics.android:crashlytics:1.+'
 }
+
+File propFile = file('signing.properties');
+if (propFile.exists()) {
+    def Properties props = new Properties()
+    props.load(new FileInputStream(propFile))
+
+    if (props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
+            props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
+        android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+        android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
+        android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+        android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+    } else {
+        android.buildTypes.release.signingConfig = null
+    }
+} else {
+    android.buildTypes.release.signingConfig = null
+}
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.12'
