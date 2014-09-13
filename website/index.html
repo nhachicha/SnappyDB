@@ -21,7 +21,7 @@
           <div class="span7">
             <menu>
               <ul>
-                <li><a href="#download" class="menu download">Download v0.2.0</a></li>
+                <li><a href="#download" class="menu download">Download v0.4.0</a></li>
                 <li><a href="http://github.com/nhachicha/SnappyDB" data-title="View GitHub Project" class="menu github"><img src="static/icon-github.png" alt="GitHub"/></a></li>
               </ul>
             </menu>
@@ -73,68 +73,34 @@ try {
    } catch (SnappydbException e) {
  }
             </pre>
+
             </p>
             
-            <p>For more recipes please take a look at the <a href="https://github.com/nhachicha/SnappyDB/blob/master/Cookbook.md">Cookbook</a>.</p>
-<p>With SnappyDB you could seamlessly store and retrieve your object/array, it use <a href="https://github.com/EsotericSoftware/kryo">Kryo</a> serialization which it <a href="https://github.com/eishay/jvm-serializers/wiki">faster</a> than regular Java serialization.</p>
+            <p>For more recipes please take a look at the <a href="https://github.com/nhachicha/SnappyDB#cookbook">Cookbook</a>.</p>
+            <p><a href="https://play.google.com/store/apps/details?id=com.snappydb.snippets.app">
+  <img alt="Get it on Google Play"
+       src="./img/en_generic_rgb_wo_45.png" />
+</a> Check out also the Demo App on The Play Store<p>
+<p>With SnappyDB you could seamlessly store and retrieve your object/array, it uses <a href="https://github.com/EsotericSoftware/kryo">Kryo</a> serialization which it <a href="https://github.com/eishay/jvm-serializers/wiki">faster</a> than regular Java serialization.</p>
             
             <h3 id="download">Download</h3>
 
-            <p><a href="http://snappydb.com/snappydb-0.2.0.zip" class="dl version-href">&darr;  SnappyDB</a></p>
+            <p><a href="https://github.com/nhachicha/SnappyDB" class="dl version-href">&darr;  SnappyDB</a></p>
             
-            <p> SnappyDB use native code for performance, it's available for the three main architecture of Android: ARM, x86 and mips.</p>
-            <p>The source code of SnappyDB, its samples, and its tests is <a href="http://github.com/nhachicha/SnappyDB">available on GitHub</a>.</p>
+            <p> SnappyDB uses native code for performance, it's available for the three main architecture of Android: ARM, x86 and mips.</p>
+            <p>It is distributed as an <a href="http://tools.android.com/tech-docs/new-build-system/aar-format">Android Library Project</a> 
             
-            <h4>Maven</h4>
+            <h4>Gradle</h4>
 
 
 
-            <pre class="prettyprint lang-xml">
-&lt;dependency>
-  &lt;groupId>com.snappydb&lt;/groupId>
-  &lt;artifactId>snappydb-api&lt;/artifactId>
-  &lt;version>0.2.0&lt;/version>
-&lt;/dependency>
-
-&lt;!-- ARM libraries  -->
-&lt;dependency>
-  &lt;groupId>com.snappydb&lt;/groupId>
-  &lt;artifactId>snappydb-native&lt;/artifactId>
-  &lt;version>0.2.0&lt;/version>
-  &lt;classifier>armeabi&lt;/classifier>
-  &lt;type>so&lt;/type>
-&lt;/dependency>
-&lt;dependency>
-  &lt;groupId>com.snappydb&lt;/groupId>
-  &lt;artifactId>snappydb-api&lt;/artifactId>
-  &lt;version>0.2.0&lt;/version>
-  &lt;classifier>armeabi-v7a&lt;/classifier>
-  &lt;type>so&lt;/type>
-&lt;/dependency>
-
-&lt;!-- x86 library  -->            
-&lt;dependency>
-  &lt;groupId>com.snappydb&lt;/groupId>
-  &lt;artifactId>snappydb-api&lt;/artifactId>
-  &lt;version>0.2.0&lt;/version>
-  &lt;classifier>x86&lt;/classifier>
-  &lt;type>so&lt;/type>
-&lt;/dependency>
-
-&lt;!-- MIPS library  -->            
-&lt;dependency>
-  &lt;groupId>com.snappydb&lt;/groupId>
-  &lt;artifactId>snappydb-api&lt;/artifactId>
-  &lt;version>0.2.0&lt;/version>
-  &lt;classifier>mips&lt;/classifier>
-  &lt;type>so&lt;/type>
-&lt;/dependency>
+<pre class="prettyprint lang-groovy">
+    dependencies {
+          compile 'com.snappydb:snappydb-lib:0.4.0'
+          compile 'com.esotericsoftware.kryo:kryo:2.24.0'
+    }
 			</pre>
 
-			<h5>For non maven users</h5>
-			
-			<p>You need to download the above zip containing the native libraries (.so) and the api. then copy them under your libs directory</p>
-			<img src="http://snappydb.com/img/snappydb_installation_nomaven.png"/>
 			            
             <h3 id="license">License</h3>
             <p>SnappyDB is opensource, contribution and feedback are welcomed</p>
