@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+Copyright 2014 Nabil HACHICHA
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ExecutionFragmentLayout">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/object_operations"
+        android:textSize="@dimen/example_fragment_title" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <TableRow
+            android:background="@color/row_highlight"
+            android:gravity="start">
+
+            <TextView
+                android:layout_span="2"
+                android:gravity="start"
+                android:padding="3dip"
+                android:text="@string/employee"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow android:gravity="start">
+
+            <TextView
+                android:layout_column="0"
+                android:gravity="end"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/address"
+                android:textStyle="italic" />
+
+            <EditText
+                android:id="@+id/zipCode"
+                style="@style/TextValue"
+                android:layout_column="1"
+                android:hint="@string/zipcode_hint"
+                android:maxWidth="@dimen/object_operation_zipcode"
+                android:minWidth="@dimen/object_operation_zipcode" />
+
+        </TableRow>
+
+        <TableRow android:gravity="start">
+
+            <TextView
+                android:layout_column="0"
+                android:gravity="end"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/name"
+                android:textStyle="italic" />
+
+            <EditText
+                android:id="@+id/name"
+                style="@style/TextKey"
+                android:layout_column="1"
+                android:hint="@string/name_hint"
+                android:inputType="textPostalAddress"
+                android:maxWidth="@dimen/object_operations_name"
+                android:minWidth="@dimen/object_operations_name" />
+
+        </TableRow>
+
+        <TableRow android:gravity="start">
+
+            <EditText
+                android:id="@+id/key"
+                style="@style/TextKey"
+                android:inputType="textPostalAddress"
+                android:maxWidth="@dimen/object_operations_key"
+                android:minWidth="@dimen/object_operations_key" />
+
+            <LinearLayout
+                android:layout_gravity="start"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnPut"
+                    style="@style/ActionButton"
+                    android:text="@string/put" />
+
+                <Button
+                    android:id="@+id/btnGet"
+                    style="@style/ActionButton"
+                    android:text="@string/get" />
+
+                <Button
+                    android:id="@+id/btnDel"
+                    style="@style/ActionButton"
+                    android:text="@string/btn_del" />
+
+            </LinearLayout>
+        </TableRow>
+
+        <View
+            android:layout_height="3dip"
+            android:background="@color/row_highlight"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp" />
+
+    </TableLayout>
+
+</LinearLayout>

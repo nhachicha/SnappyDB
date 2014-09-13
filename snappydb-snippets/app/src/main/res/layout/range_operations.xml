@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+Copyright 2014 Nabil HACHICHA
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ExecutionFragmentLayout">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/prefix_range_operation"
+        android:textSize="@dimen/example_fragment_title" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <TableRow
+            android:background="@color/row_highlight"
+            android:gravity="start">
+
+            <TextView
+                android:layout_span="2"
+                android:gravity="start"
+                android:padding="3dip"
+                android:text="@string/prefix_search"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow android:gravity="start">
+
+            <EditText
+                android:id="@+id/prefix"
+                style="@style/TextValue"
+                android:hint="@string/hint_prefix_search"
+                android:inputType="textNoSuggestions"
+                android:maxWidth="@dimen/prefix"
+                android:minWidth="@dimen/prefix" />
+
+            <Button
+                android:id="@+id/btnPrefix"
+                style="@style/ActionButton"
+                android:text="@string/get" />
+
+        </TableRow>
+
+        <TableRow
+            android:background="@color/row_highlight"
+            android:gravity="start">
+
+            <TextView
+                android:layout_span="2"
+                android:gravity="start"
+                android:padding="3dip"
+                android:text="@string/range_search"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow android:gravity="start">
+
+            <EditText
+                android:id="@+id/rangeFrom"
+                style="@style/TextValue"
+                android:hint="@string/hint_range_from"
+                android:inputType="textNoSuggestions"
+                android:maxWidth="@dimen/range"
+                android:minWidth="@dimen/range" />
+
+            <EditText
+                android:id="@+id/rangeTo"
+                style="@style/TextValue"
+                android:hint="@string/hint_range_to"
+                android:inputType="textNoSuggestions"
+                android:maxWidth="@dimen/range"
+                android:minWidth="@dimen/range" />
+
+            <Button
+                android:id="@+id/btnRange"
+                style="@style/ActionButton"
+                android:text="@string/get" />
+
+        </TableRow>
+
+        <View
+            android:layout_height="3dip"
+            android:background="@color/row_highlight"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp" />
+
+        <TableRow android:gravity="start">
+
+            <TextView
+                android:id="@+id/result"
+                android:layout_span="2"
+                android:ellipsize="marquee"
+                android:singleLine="false" />
+        </TableRow>
+
+    </TableLayout>
+</LinearLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.snappydb.snippets.app" >
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name">
+
+        <activity
+            android:theme="@style/Theme.AppCompat.Light"
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.snippets.OpenCloseSnippetActivity" android:theme="@style/Theme.AppCompat.Light"/>
+        <activity android:name=".activity.snippets.PrimitiveOperationsSnippetActivity" android:theme="@style/Theme.AppCompat.Light"/>
+        <activity android:name=".activity.snippets.SerializableSnippetActivity" android:theme="@style/Theme.AppCompat.Light"/>
+        <activity android:name=".activity.snippets.ObjectsSnippetActivity" android:theme="@style/Theme.AppCompat.Light"/>
+        <activity android:name=".activity.snippets.ArrayOperationsSnippetActivity" android:theme="@style/Theme.AppCompat.Light"/>
+        <activity android:name=".activity.snippets.RangeOperationsSnippetActivity" android:theme="@style/Theme.AppCompat.Light"/>
+        <activity android:name=".activity.snippets.CustomKryoSerializationSnippetActivity" android:theme="@style/Theme.AppCompat.Light"/>
+
+    </application>
+
+</manifest>

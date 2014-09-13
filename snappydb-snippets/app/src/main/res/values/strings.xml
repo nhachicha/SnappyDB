@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright 2014 Nabil HACHICHA
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<resources>
+
+    <string name="app_name">SnappyDB Samples</string>
+    <string name="add_string">String</string>
+    <string name="add_int">Int</string>
+    <string name="add_boolean">Boolean</string>
+    <string name="add_double">Double</string>
+    <string name="primitive_operations">Primitive Operations:</string>
+    <string name="put">Put</string>
+    <string name="get">Get</string>
+    <string name="key_exist">Key \nexist?</string>
+    <string name="delete">Delete</string>
+    <string name="prefix_range_operation">Prefix/Range Operations</string>
+    <string name="prefix_search">Prefix Search</string>
+    <string name="hint_prefix_search">Ex: android</string>
+    <string name="range_search">Range Search</string>
+    <string name="hint_range_from">Ex: android:11</string>
+    <string name="hint_range_to">Ex: android:14</string>
+    <string name="custom_serializer">Custom Serializer</string>
+    <string name="employee">Employee</string>
+    <string name="name">Name:</string>
+    <string name="name_hint">John Doe</string>
+    <string name="btn_del">Del</string>
+    <string name="array_operations">Array Operations</string>
+    <string name="employee1">Employee 1:</string>
+    <string name="address">Address:</string>
+    <string name="zipcode_hint">Zip Code</string>
+    <string name="employee2">Employee 2:</string>
+    <string name="object_operations">Object Operations</string>
+    <string name="about">About</string>
+
+
+    <string-array name="boolean_arrays">
+        <item>true</item>
+        <item>false</item>
+    </string-array>
+</resources>

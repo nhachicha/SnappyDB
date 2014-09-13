@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+Copyright 2014 Nabil HACHICHA
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/ExecutionFragmentLayout">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:text="@string/primitive_operations"
+        android:textSize="@dimen/example_fragment_title" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:stretchColumns="1">
+
+        <TableRow
+            android:background="@color/row_highlight"
+            android:gravity="start">
+
+            <TextView
+                android:gravity="end"
+                android:padding="3dip"
+                android:text="@string/add_string"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/txt_key_string"
+                    style="@style/TextKey" />
+
+                <EditText
+                    android:id="@+id/txt_value_string"
+                    style="@style/TextValue" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_string_insert"
+                    style="@style/ActionButton"
+                    android:text="@string/put" />
+
+                <Button
+                    android:id="@+id/btn_string_get"
+                    style="@style/ActionButton"
+                    android:text="@string/get" />
+
+            </LinearLayout>
+
+        </TableRow>
+
+
+        <TableRow android:gravity="start">
+
+            <TextView
+                android:gravity="end"
+                android:padding="3dip"
+                android:text="@string/add_int"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/txt_key_int"
+                    style="@style/TextKey" />
+
+                <EditText
+                    android:id="@+id/txt_value_int"
+                    style="@style/TextValue"
+                    android:inputType="numberSigned" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_int_insert"
+                    style="@style/ActionButton"
+                    android:text="@string/put" />
+
+                <Button
+                    android:id="@+id/btn_int_get"
+                    style="@style/ActionButton"
+                    android:text="@string/get" />
+
+            </LinearLayout>
+
+        </TableRow>
+
+        <TableRow
+            android:background="@color/row_highlight"
+            android:gravity="start">
+
+            <TextView
+                android:gravity="end"
+                android:padding="3dip"
+                android:text="@string/add_double"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/txt_key_double"
+                    style="@style/TextKey" />
+
+                <EditText
+                    android:id="@+id/txt_value_double"
+                    style="@style/TextValue"
+                    android:inputType="numberDecimal|numberSigned" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_double_insert"
+                    style="@style/ActionButton"
+                    android:text="@string/put" />
+
+                <Button
+                    android:id="@+id/btn_double_get"
+                    style="@style/ActionButton"
+                    android:text="@string/get" />
+
+            </LinearLayout>
+
+        </TableRow>
+
+        <TableRow android:gravity="start">
+
+            <TextView
+                android:gravity="end"
+                android:padding="3dip"
+                android:text="@string/add_boolean"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/txt_key_boolean"
+                    style="@style/TextKey" />
+
+                <Spinner
+                    android:id="@+id/value_boolean"
+                    android:layout_width="@dimen/spinner_width"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:entries="@array/boolean_arrays"
+                    android:textSize="@dimen/text_small" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_boolean_insert"
+                    style="@style/ActionButton"
+                    android:text="@string/put" />
+
+                <Button
+                    android:id="@+id/btn_boolean_get"
+                    style="@style/ActionButton"
+                    android:text="@string/get" />
+
+            </LinearLayout>
+
+        </TableRow>
+
+        <TableRow
+            android:background="@color/row_highlight"
+            android:gravity="start">
+
+            <TextView
+                android:gravity="end"
+                android:padding="3dip"
+                android:text="@string/key_exist"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/txt_key_check"
+                    style="@style/TextKey" />
+
+                <EditText
+                    android:id="@+id/txt_value_check"
+                    style="@style/TextValue" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_check_key"
+                style="@style/ActionButton"
+                android:layout_height="match_parent"
+                android:text="@android:string/ok" />
+
+        </TableRow>
+
+        <TableRow android:gravity="start">
+
+            <TextView
+                android:gravity="end"
+                android:padding="3dip"
+                android:text="@string/delete"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/txt_key_delete"
+                    style="@style/TextKey" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_delete_key"
+                style="@style/ActionButton"
+                android:text="@android:string/ok" />
+
+        </TableRow>
+
+    </TableLayout>
+
+</LinearLayout>
