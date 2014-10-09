@@ -227,11 +227,19 @@ JNIEXPORT jlong JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysIterator
 
 /*
  * Class:     com_snappydb_internal_DBImpl
- * Method:    __iteratorNext
+ * Method:    __iteratorNextKey
  * Signature: (JLjava/lang/String;Z)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNext
+JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNextKey
   (JNIEnv *, jobject, jlong, jstring, jboolean);
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __iteratorNextArray
+ * Signature: (JLjava/lang/String;ZI)[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNextArray
+  (JNIEnv *, jobject, jlong, jstring, jboolean, jint);
 
 /*
  * Class:     com_snappydb_internal_DBImpl

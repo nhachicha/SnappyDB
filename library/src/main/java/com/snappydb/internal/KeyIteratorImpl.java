@@ -50,16 +50,30 @@ class KeyIteratorImpl implements KeyIterator {
 
     @Override
     public String next() {
-        String key = nextKey;
+        if (nextKey == null) {
+            throw new NoSuchElementException();
+        }
         try {
-            nextKey = db.__iteratorNext(ptr, endPrefix, reverse);
+            String key = nextKey;
+            nextKey = db.__iteratorNextKey(ptr, endPrefix, reverse);
+            return key;
         } catch (SnappydbException e) {
             throw new RuntimeException(e);
         }
-        if (key == null) {
+    }
+
+    @Override
+    public String[] next(int max) {
+        if (nextKey == null) {
             throw new NoSuchElementException();
         }
-        return key;
+        try {
+            String[] keys = db.__iteratorNextArray(ptr, endPrefix, reverse, max);
+            nextKey = db.__iteratorKey(ptr, endPrefix, reverse);
+            return keys;
+        } catch (SnappydbException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

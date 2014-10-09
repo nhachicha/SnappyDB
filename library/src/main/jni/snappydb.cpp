@@ -46,23 +46,6 @@ void throwException(JNIEnv *env, const char* msg) {
 	 env->ThrowNew(snappydbExceptionClazz, msg);
 }
 
-jstring iteratorValue(leveldb::Iterator* it, JNIEnv *env, jstring jEndPrefix, jboolean reverse) {
-	if (!it->Valid()) {
-		return NULL;
-	}
-
-	if (jEndPrefix) {
-		const char* endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
-		if ((!reverse && it->key().compare(endPrefix) > 0) || (reverse && it->key().compare(endPrefix) < 0)) {
-			env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
-			return NULL;
-		}
-		env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
-	}
-
-	return env->NewStringUTF(it->key().ToString().c_str());
-}
-
 //***********************
 //*      DB MANAGEMENT
 //***********************
@@ -939,10 +922,10 @@ JNIEXPORT jlong JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysIterator
 	return (jlong) it;
 }
 
-JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNext
+JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNextKey
   (JNIEnv *env, jobject thiz, jlong ptr, jstring jEndPrefix, jboolean reverse) {
 
-	LOGI("iterator next");
+	LOGI("iterator next key");
 
 	if (!isDBopen) {
 		throwException (env, "database is not open");
@@ -956,13 +939,71 @@ JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNext
 		return NULL;
 	}
 
-	if (reverse) {
-		it->Prev();
-	} else {
-		it->Next();
+	if (reverse) { it->Prev(); }
+	else { it->Next(); }
+
+	if (!it->Valid()) {
+		return NULL;
+	}
+	if (jEndPrefix) {
+		const char* endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
+		if ((!reverse && it->key().compare(endPrefix) > 0) || (reverse && it->key().compare(endPrefix) < 0)) {
+			return NULL;
+			env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+		}
+		env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+	}
+	return env->NewStringUTF(it->key().ToString().c_str());
+}
+
+JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNextArray
+  (JNIEnv *env, jobject thiz, jlong ptr, jstring jEndPrefix, jboolean reverse, jint max) {
+
+	LOGI("iterator next array");
+
+	if (!isDBopen) {
+		throwException (env, "database is not open");
+		return NULL;
 	}
 
-	return iteratorValue(it, env, jEndPrefix, reverse);
+	std::vector<std::string> result;
+	leveldb::Iterator* it = (leveldb::Iterator*) ptr;
+
+	if (!it->Valid()) {
+		throwException (env, "iterator is not valid");
+		return NULL;
+	}
+
+	const char* endPrefix = NULL;
+	if (jEndPrefix) {
+		endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
+	}
+
+	int count = 0;
+	while (count < max && it->Valid() && (!endPrefix || (!reverse && it->key().compare(endPrefix) <= 0) || (reverse && it->key().compare(endPrefix) >= 0))) {
+		result.push_back(it->key().ToString());
+    	++count;
+	if (reverse) { it->Prev(); }
+	else { it->Next(); }
+	}
+
+	if (jEndPrefix) {
+		env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+	}
+
+	std::vector<std::string>::size_type n = result.size();
+	jobjectArray ret= (jobjectArray)env->NewObjectArray(n,
+		         env->FindClass("java/lang/String"),
+		         env->NewStringUTF(""));
+
+	jstring str;
+	for (int i=0; i<n ; i++) {
+		str = env->NewStringUTF(result[i].c_str());
+		env->SetObjectArrayElement(ret, i, str);
+		env->DeleteLocalRef(str);
+	}
+
+	return ret;
 }
 
 JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorKey
@@ -972,7 +1013,18 @@ JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorKey
 
 	leveldb::Iterator* it = (leveldb::Iterator*) ptr;
 
-	return iteratorValue(it, env, jEndPrefix, reverse);
+	if (!it->Valid()) {
+		return NULL;
+	}
+	if (jEndPrefix) {
+		const char* endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
+		if ((!reverse && it->key().compare(endPrefix) > 0) || (reverse && it->key().compare(endPrefix) < 0)) {
+			return NULL;
+			env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+		}
+		env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+	}
+	return env->NewStringUTF(it->key().ToString().c_str());
 }
 
 JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorClose

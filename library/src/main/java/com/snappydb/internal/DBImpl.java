@@ -597,7 +597,9 @@ public class DBImpl implements DB {
 
     native long __findKeysIterator(String prefix, boolean reverse) throws SnappydbException;
 
-    native String __iteratorNext(long ptr, String endPrefix, boolean reverse) throws SnappydbException;
+    native String __iteratorNextKey(long ptr, String endPrefix, boolean reverse) throws SnappydbException;
+
+    native String[] __iteratorNextArray(long ptr, String endPrefix, boolean reverse, int max) throws SnappydbException;
 
     native String __iteratorKey(long ptr, String endPrefix, boolean reverse);
 
