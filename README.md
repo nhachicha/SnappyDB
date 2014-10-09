@@ -182,6 +182,7 @@ boolean isKeyExist = snappyDB.exists("key");
 ```java
 snappyDB.del("key");
 ```
+
 ### Keys Search
 ###### By Prefix
 ```java
@@ -252,6 +253,93 @@ assertEquals("android:16", keys[1]);
 assertEquals("android:19", keys[2]);
 ```
 
+###### With offset and limit
+```java
+//return all keys starting with "android" after the first 5
+keys = snappyDB.findKeys("android", 5);
+assertEquals(4, keys.length);
+assertEquals("android:11", keys[0]);
+assertEquals("android:14", keys[1]);
+assertEquals("android:16", keys[2]);
+assertEquals("android:19", keys[3]);
+
+//return 3 first keys starting with "android"
+keys = snappyDB.findKeys("android", 0, 3);
+assertEquals(3, keys.length);
+assertEquals("android:03", keys[0]);
+assertEquals("android:04", keys[1]);
+assertEquals("android:05", keys[2]);
+
+//return the fourth key starting with "android" (offset 3, limit 1)
+keys = snappyDB.findKeys("android", 3, 1);
+assertEquals(1, keys.length);
+assertEquals("android:08", keys[0]);
+
+//return the two first keys between android:14 and android:99
+keys = snappyDB.findKeysBetween("android:14", "android:99", 0, 2);
+assertEquals(2, keys.length);
+assertEquals("android:14", keys[0]);
+assertEquals("android:16", keys[1]);
+
+//return the third key (offset 2, limit 1) after android:10 before android:99
+keys = snappyDB.findKeysBetween("android:10", "android:99", 2, 1);
+assertEquals(1, keys.length);
+assertEquals("android:16", keys[0]);
+```
+
+### Keys Count
+
+Counting is quicker than extracting values (if you don't need them). Especially on very big collections.
+
+###### By Prefix
+```java
+assertEquals(9, snappyDB.countKeys("android"));
+assertEquals(5, snappyDB.countKeys("android:0"));
+```
+###### By Range [from .. to]
+```java
+assertEquals(3, snappyDB.countKeysBetween("android:08", "android:11"));
+assertEquals(3, snappyDB.countKeysBetween("android:13", "android:99"));
+```
+
+### Iterators
+
+Each time you use the offset & limit arguments, the engine makes the query and then scrolls to your offset. Which means that the bigger the offset is, the longer the query will take. This is not a problem on small collections, but on very larg collections, it is.
+
+An iterator keeps it's position in the key collection and can be asked for the next key at any time. It is therefore better to use an iterator on very large collections.
+
+Iterators work on DB snapshot, which means that if you add or delete value in / from the DB, the iterators will not see those changes.
+
+Please note that iterators given by the SnappyDB are closeable and need to be closed once finished with. As iterators work on a DB snapshot, not closing them is a serious memory leak.
+
+Please note that you *should not* use an iterator to load all values at once. To do that, using the array based APIs (findKeys and findKeysBetween) is a lot more efficient. Iterators should only be used on large collection for paging access.
+
+```java
+// An iterator to all keys
+it = snappyDB.allKeysIterator();
+/*...*/
+it.close();
+
+// An iterator to all keys in reverse order
+it = snappyDB.allKeysReverseIterator();
+/*...*/
+it.close();
+
+// An iterator to all keys including and after android:14
+it = snappyDB.findKeysIterator("android:14");
+/*...*/
+it.close();
+
+// An iterator to all keys from android:05 to android:10
+it = snappyDB.findKeysBetweenIterator("android:05", "android:10");
+/*...*/
+it.close();
+
+// An iterator to all keys from android:09 to android:05 in reverse order
+it = snappyDB.findKeysBetweenReverseIterator("android:09", "android:05");
+/*...*/
+it.close();
+```
 
 License
 --------
