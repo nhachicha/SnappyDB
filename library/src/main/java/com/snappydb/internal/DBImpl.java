@@ -22,6 +22,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.snappydb.DB;
+import com.snappydb.KeyIterator;
 import com.snappydb.SnappydbException;
 
 import java.io.ByteArrayOutputStream;
@@ -453,10 +454,48 @@ public class DBImpl implements DB {
         return __countKeysBetween(startPrefix, endPrefix);
     }
 
+    //***********************
+    //*      ITERATORS
+    //***********************
+    @Override
+    public KeyIterator allKeysIterator()
+            throws SnappydbException {
+        return new KeyIteratorImpl(this, __findKeysIterator(null, false), null, false);
+    }
+
+    @Override
+    public KeyIterator allKeysReverseIterator()
+            throws SnappydbException {
+        return new KeyIteratorImpl(this, __findKeysIterator(null, true),  null, true);
+    }
+
+    @Override
+    public KeyIterator findKeysIterator(String prefix)
+            throws SnappydbException {
+        return new KeyIteratorImpl(this, __findKeysIterator(prefix, false), null, false);
+    }
+
+    @Override
+    public KeyIterator findKeysReverseIterator(String prefix)
+            throws SnappydbException {
+        return new KeyIteratorImpl(this, __findKeysIterator(prefix, true), null, true);
+    }
+
+    @Override
+    public KeyIterator findKeysBetweenIterator(String startPrefix, String endPrefix)
+            throws SnappydbException {
+        return new KeyIteratorImpl(this, __findKeysIterator(startPrefix, false), endPrefix, false);
+    }
+
+    @Override
+    public KeyIterator findKeysBetweenReverseIterator(String startPrefix, String endPrefix)
+            throws SnappydbException {
+        return new KeyIteratorImpl(this, __findKeysIterator(startPrefix, true), endPrefix, true);
+    }
+
     //*********************************
     //*      KRYO SERIALIZATION
     //*********************************
-
     @Override
     public Kryo getKryoInstance() {
         return this.kryo;
@@ -555,4 +594,12 @@ public class DBImpl implements DB {
     private native String[] __findKeysBetween(String startPrefix, String endPrefix, int offset, int limit) throws SnappydbException;
 
     private native int __countKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
+
+    native long __findKeysIterator(String prefix, boolean reverse) throws SnappydbException;
+
+    native String __iteratorNext(long ptr, String endPrefix, boolean reverse) throws SnappydbException;
+
+    native String __iteratorKey(long ptr, String endPrefix, boolean reverse);
+
+    native void __iteratorClose(long ptr);
 }

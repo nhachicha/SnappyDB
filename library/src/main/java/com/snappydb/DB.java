@@ -107,6 +107,18 @@ public interface DB {
 
     public int countKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
 
+    //***********************
+    //*      ITERATORS
+    //***********************
+    public KeyIterator allKeysIterator() throws SnappydbException;
+    public KeyIterator allKeysReverseIterator() throws SnappydbException;
+
+    public KeyIterator findKeysIterator(String prefix) throws SnappydbException;
+    public KeyIterator findKeysReverseIterator(String prefix) throws SnappydbException;
+
+    public KeyIterator findKeysBetweenIterator(String startPrefix, String endPrefix) throws SnappydbException;
+    public KeyIterator findKeysBetweenReverseIterator(String startPrefix, String endPrefix) throws SnappydbException;
+
     //*********************************
     //*      KRYO SERIALIZATION
     //*********************************

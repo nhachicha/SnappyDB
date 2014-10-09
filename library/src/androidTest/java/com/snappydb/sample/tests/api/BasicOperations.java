@@ -25,6 +25,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.snappydb.DB;
 import com.snappydb.DBFactory;
+import com.snappydb.KeyIterator;
 import com.snappydb.SnappyDB;
 import com.snappydb.SnappydbException;
 import com.snappydb.sample.tests.api.helper.Book;
@@ -33,6 +34,7 @@ import com.snappydb.sample.tests.api.helper.MyCustomObject;
 import com.snappydb.sample.tests.api.helper.MyCustomObjectSerializer;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.BitSet;
 import java.util.GregorianCalendar;
@@ -859,5 +861,105 @@ public class BasicOperations extends AndroidTestCase {
         assertEquals(books[1], collection[1]);
         assertEquals(books[2], collection[2]);
 
+    }
+
+    @SmallTest
+    public void testKeyIterator() throws SnappydbException, IOException {
+        snappyDB = DBFactory.open(getContext(), dbName);
+
+        String[] testValues = {
+                "cat1:subcatg1", "cat1:subcatg2", "cat1:subcatg3",
+                "cat2:subcatg1", "cat2:subcatg2", "cat2:subcatg3",
+                "cat3:subcatg1", "cat3:subcatg2", "cat3:subcatg3",
+        };
+
+        for (String value : testValues) {
+            snappyDB.put("key:" + value, "value:" + value);
+        }
+
+        KeyIterator it;
+        int i;
+
+        it = snappyDB.allKeysIterator();
+        i = 0;
+        while (it.hasNext()) {
+            final String next = it.next();
+            assertEquals("key:" + testValues[i], next);
+            ++i;
+        }
+        assertEquals(9, i);
+        it.close();
+
+        it = snappyDB.allKeysReverseIterator();
+        i = 8;
+        while (it.hasNext()) {
+            final String next = it.next();
+            assertEquals("key:" + testValues[i], next);
+            --i;
+        }
+        assertEquals(-1, i);
+        it.close();
+
+        it = snappyDB.findKeysReverseIterator("zzz");
+        i = 8;
+        while (it.hasNext()) {
+            final String next = it.next();
+            assertEquals("key:" + testValues[i], next);
+            --i;
+        }
+        assertEquals(-1, i);
+        it.close();
+
+        it = snappyDB.findKeysIterator("key:cat2:");
+        i = 3;
+        while (it.hasNext()) {
+            final String next = it.next();
+            assertEquals("key:" + testValues[i], next);
+            ++i;
+        }
+        assertEquals(9, i);
+        it.close();
+
+        it = snappyDB.findKeysBetweenIterator("key:cat2:", "key:cat3:");
+        i = 3;
+        while (it.hasNext()) {
+            final String next = it.next();
+            assertEquals("key:" + testValues[i], next);
+            ++i;
+        }
+        assertEquals(6, i);
+        it.close();
+
+        it = snappyDB.findKeysReverseIterator("key:cat1:subcatg3");
+        i = 2;
+        while (it.hasNext()) {
+            final String next = it.next();
+            assertEquals("key:" + testValues[i], next);
+            --i;
+        }
+        assertEquals(-1, i);
+        it.close();
+
+        it = snappyDB.findKeysBetweenReverseIterator("key:cat2:subcatg3", "key:cat2:subcatg1");
+        i = 5;
+        while (it.hasNext()) {
+            final String next = it.next();
+            assertEquals("key:" + testValues[i], next);
+            --i;
+        }
+        assertEquals(2, i);
+        it.close();
+
+        it = snappyDB.findKeysBetweenReverseIterator("key:cat2:subcatg4", "key:cat2:");
+        i = 5;
+        while (it.hasNext()) {
+            final String next = it.next();
+            assertEquals("key:" + testValues[i], next);
+            --i;
+        }
+        assertEquals(2, i);
+        it.close();
+
+        snappyDB.destroy();
     }
 }

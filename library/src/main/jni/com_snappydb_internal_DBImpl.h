@@ -217,6 +217,38 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBet
 JNIEXPORT jint JNICALL Java_com_snappydb_internal_DBImpl__1_1countKeysBetween
   (JNIEnv *, jobject, jstring, jstring);
 
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __findKeysIterator
+ * Signature: (Ljava/lang/String;Z)J
+ */
+JNIEXPORT jlong JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysIterator
+  (JNIEnv *, jobject, jstring, jboolean);
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __iteratorNext
+ * Signature: (JLjava/lang/String;Z)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNext
+  (JNIEnv *, jobject, jlong, jstring, jboolean);
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __iteratorKey
+ * Signature: (JLjava/lang/String;Z)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorKey
+  (JNIEnv *, jobject, jlong, jstring, jboolean);
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __iteratorClose
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorClose
+  (JNIEnv *, jobject, jlong);
+
 #ifdef __cplusplus
 }
 #endif

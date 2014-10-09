@@ -46,6 +46,23 @@ void throwException(JNIEnv *env, const char* msg) {
 	 env->ThrowNew(snappydbExceptionClazz, msg);
 }
 
+jstring iteratorValue(leveldb::Iterator* it, JNIEnv *env, jstring jEndPrefix, jboolean reverse) {
+	if (!it->Valid()) {
+		return NULL;
+	}
+
+	if (jEndPrefix) {
+		const char* endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
+		if ((!reverse && it->key().compare(endPrefix) > 0) || (reverse && it->key().compare(endPrefix) < 0)) {
+			env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+			return NULL;
+		}
+		env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+	}
+
+	return env->NewStringUTF(it->key().ToString().c_str());
+}
+
 //***********************
 //*      DB MANAGEMENT
 //***********************
@@ -881,3 +898,89 @@ JNIEXPORT jint JNICALL Java_com_snappydb_internal_DBImpl__1_1countKeysBetween
 	return count;
 }
 
+JNIEXPORT jlong JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysIterator
+  (JNIEnv *env, jobject thiz, jstring jPrefix, jboolean reverse) {
+
+	LOGI("find keys iterator");
+
+	if (!isDBopen) {
+		throwException (env, "database is not open");
+		return NULL;
+	}
+
+	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
+
+	if (jPrefix) {
+		const char* prefix = env->GetStringUTFChars(jPrefix, 0);
+		LOGI("(%p) Seeking prefix: %s", it, prefix);
+		it->Seek(prefix);
+	    env->ReleaseStringUTFChars(jPrefix, prefix);
+	} else if (reverse) {
+		it->SeekToLast();
+	} else {
+		it->SeekToFirst();
+	}
+
+	// When seeking in a leveldb iterator, if the key does not exists, it is positioned to the key
+	// immediately *after* what we are seeking or invalid. In the case of a reverse iterator, we
+	// want the key immediately *before* or the last.
+	if (reverse) {
+		if (!it->Valid()) {
+			it->SeekToLast();
+		} else if (jPrefix) {
+			const char* prefix = env->GetStringUTFChars(jPrefix, 0);
+			if (it->key().compare(prefix) > 0) {
+				it->Prev();
+			}
+			env->ReleaseStringUTFChars(jPrefix, prefix);
+		}
+	}
+
+	return (jlong) it;
+}
+
+JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNext
+  (JNIEnv *env, jobject thiz, jlong ptr, jstring jEndPrefix, jboolean reverse) {
+
+	LOGI("iterator next");
+
+	if (!isDBopen) {
+		throwException (env, "database is not open");
+		return NULL;
+	}
+
+	leveldb::Iterator* it = (leveldb::Iterator*) ptr;
+
+	if (!it->Valid()) {
+		throwException (env, "iterator is not valid");
+		return NULL;
+	}
+
+	if (reverse) {
+		it->Prev();
+	} else {
+		it->Next();
+	}
+
+	return iteratorValue(it, env, jEndPrefix, reverse);
+}
+
+JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorKey
+  (JNIEnv *env, jobject thiz, jlong ptr, jstring jEndPrefix, jboolean reverse) {
+
+	LOGI("iterator key");
+
+	leveldb::Iterator* it = (leveldb::Iterator*) ptr;
+
+	return iteratorValue(it, env, jEndPrefix, reverse);
+}
+
+JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorClose
+  (JNIEnv *env, jobject thiz, jlong ptr) {
+
+	LOGI("iterator delete");
+
+	leveldb::Iterator* it = (leveldb::Iterator*) ptr;
+
+	delete it;
+}
