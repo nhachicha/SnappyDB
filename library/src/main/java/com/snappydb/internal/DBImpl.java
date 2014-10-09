@@ -400,17 +400,28 @@ public class DBImpl implements DB {
 
     @Override
     public String[] findKeys(String prefix) throws SnappydbException {
+        return findKeys(prefix, Integer.MAX_VALUE - 8);
+    }
+
+    @Override
+    public String[] findKeys(String prefix, int limit) throws SnappydbException {
         checkPrefix(prefix);
 
-        return __findKeys(prefix);
+        return __findKeys(prefix, limit);
     }
 
     @Override
     public String[] findKeysBetween(String startPrefix, String endPrefix)
             throws SnappydbException {
+        return findKeysBetween(startPrefix, endPrefix, Integer.MAX_VALUE - 8);
+    }
+
+    @Override
+    public String[] findKeysBetween(String startPrefix, String endPrefix, int limit)
+            throws SnappydbException {
         checkRange(startPrefix, endPrefix);
 
-        return __findKeysBetween(startPrefix, endPrefix);
+        return __findKeysBetween(startPrefix, endPrefix, limit);
     }
 
     //*********************************
@@ -499,7 +510,7 @@ public class DBImpl implements DB {
 
     private native boolean __exists(String key) throws SnappydbException;
 
-    private native String[] __findKeys (String prefix) throws SnappydbException;
+    private native String[] __findKeys (String prefix, int limit) throws SnappydbException;
 
-    private native String[] __findKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
+    private native String[] __findKeysBetween(String startPrefix, String endPrefix, int limit) throws SnappydbException;
 }

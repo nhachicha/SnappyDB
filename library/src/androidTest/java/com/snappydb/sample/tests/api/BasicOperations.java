@@ -602,6 +602,13 @@ public class BasicOperations extends AndroidTestCase {
         assertEquals("key:cat3:subcatg2", keys[7]);
         assertEquals("key:cat3:subcatg3", keys[8]);
 
+        //return 3 first keys starting with"key:cat" 3
+        keys = snappyDB.findKeys("key:cat", 3);
+        assertEquals(3, keys.length);
+        assertEquals("key:cat1:subcatg1", keys[0]);
+        assertEquals("key:cat1:subcatg2", keys[1]);
+        assertEquals("key:cat1:subcatg3", keys[2]);
+
         keys = snappyDB.findKeys("key:");
         assertEquals(9, keys.length);
         assertEquals("key:cat1:subcatg1", keys[0]);
@@ -621,6 +628,12 @@ public class BasicOperations extends AndroidTestCase {
         assertEquals("key:cat1:subcatg2", keys[1]);
         assertEquals("key:cat1:subcatg3", keys[2]);
 
+        //return all keys since there are less than asked
+        keys = snappyDB.findKeys("key:cat1", 5);
+        assertEquals(3, keys.length);
+        assertEquals("key:cat1:subcatg1", keys[0]);
+        assertEquals("key:cat1:subcatg2", keys[1]);
+        assertEquals("key:cat1:subcatg3", keys[2]);
 
 //		//return all keys starting with"key:cat2" 3
         keys = snappyDB.findKeys("key:cat2");
@@ -692,6 +705,10 @@ public class BasicOperations extends AndroidTestCase {
         assertEquals("key:cat2:subcatg1", keys[3]);
         assertEquals("key:cat2:subcatg2", keys[4]);
 
+        keys = snappyDB.findKeysBetween("key:cat1:", "key:cat2:subcatg2", 2);
+        assertEquals(2, keys.length);
+        assertEquals("key:cat1:subcatg1", keys[0]);
+        assertEquals("key:cat1:subcatg2", keys[1]);
 
         snappyDB.put("android:03", "Cupcake");// adding 0 to maintain the lexicographical order
         snappyDB.put("android:04", "Donut");
@@ -725,6 +742,12 @@ public class BasicOperations extends AndroidTestCase {
 
         // 1 case FROM & TO exists
         keys = snappyDB.findKeysBetween("android:08", "android:11");
+        assertEquals(3, keys.length);
+        assertEquals("android:08", keys[0]);
+        assertEquals("android:09", keys[1]);
+        assertEquals("android:11", keys[2]);
+
+        keys = snappyDB.findKeysBetween("android:08", "android:11", 5);
         assertEquals(3, keys.length);
         assertEquals("android:08", keys[0]);
         assertEquals("android:09", keys[1]);

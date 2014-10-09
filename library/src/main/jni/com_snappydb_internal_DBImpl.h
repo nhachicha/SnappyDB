@@ -186,18 +186,18 @@ JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1exists
 /*
  * Class:     com_snappydb_internal_DBImpl
  * Method:    __findKeys
- * Signature: (Ljava/lang/String;)[Ljava/lang/String;
+ * Signature: (Ljava/lang/String;I)[Ljava/lang/String;
  */
 JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
-  (JNIEnv *, jobject, jstring);
+  (JNIEnv *, jobject, jstring, jint);
 
 /*
  * Class:     com_snappydb_internal_DBImpl
  * Method:    __findKeysBetween
- * Signature: (Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;
+ * Signature: (Ljava/lang/String;Ljava/lang/String;I)[Ljava/lang/String;
  */
 JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBetween
-  (JNIEnv *, jobject, jstring, jstring);
+  (JNIEnv *, jobject, jstring, jstring, jint);
 
 #ifdef __cplusplus
 }
