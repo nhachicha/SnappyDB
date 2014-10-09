@@ -30,6 +30,7 @@ import java.lang.reflect.Array;
 
 public class DBImpl implements DB {
     private static final String LIB_NAME = "snappydb-native";
+    private static final int LIMIT_MAX = Integer.MAX_VALUE - 8;
 
     private String dbPath;
     private Kryo kryo;
@@ -400,28 +401,41 @@ public class DBImpl implements DB {
 
     @Override
     public String[] findKeys(String prefix) throws SnappydbException {
-        return findKeys(prefix, Integer.MAX_VALUE - 8);
+        return findKeys(prefix, 0, LIMIT_MAX);
     }
 
     @Override
-    public String[] findKeys(String prefix, int limit) throws SnappydbException {
-        checkPrefix(prefix);
+    public String[] findKeys(String prefix, int offset) throws SnappydbException {
+        return findKeys(prefix, offset, LIMIT_MAX);
+    }
 
-        return __findKeys(prefix, limit);
+    @Override
+    public String[] findKeys(String prefix, int offset, int limit) throws SnappydbException {
+        checkPrefix(prefix);
+        checkOffsetLimit(offset, limit);
+
+        return __findKeys(prefix, offset, limit);
     }
 
     @Override
     public String[] findKeysBetween(String startPrefix, String endPrefix)
             throws SnappydbException {
-        return findKeysBetween(startPrefix, endPrefix, Integer.MAX_VALUE - 8);
+        return findKeysBetween(startPrefix, endPrefix, 0, LIMIT_MAX);
     }
 
     @Override
-    public String[] findKeysBetween(String startPrefix, String endPrefix, int limit)
+    public String[] findKeysBetween(String startPrefix, String endPrefix, int offset)
+            throws SnappydbException {
+        return findKeysBetween(startPrefix, endPrefix, offset, LIMIT_MAX);
+    }
+
+    @Override
+    public String[] findKeysBetween(String startPrefix, String endPrefix, int offset, int limit)
             throws SnappydbException {
         checkRange(startPrefix, endPrefix);
+        checkOffsetLimit(offset, limit);
 
-        return __findKeysBetween(startPrefix, endPrefix, limit);
+        return __findKeysBetween(startPrefix, endPrefix, offset, limit);
     }
 
     //*********************************
@@ -461,6 +475,15 @@ public class DBImpl implements DB {
     private void checkArgNotEmpty (String arg, String errorMsg) throws SnappydbException {
         if (TextUtils.isEmpty(arg)) {
             throw new SnappydbException (errorMsg);
+        }
+    }
+
+    private void checkOffsetLimit (int offset, int limit) throws SnappydbException {
+        if (offset < 0) {
+            throw new SnappydbException ("Offset must not be negative");
+        }
+        if (limit <= 0) {
+            throw new SnappydbException ("Limit must not be 0 or negative");
         }
     }
 
@@ -510,7 +533,7 @@ public class DBImpl implements DB {
 
     private native boolean __exists(String key) throws SnappydbException;
 
-    private native String[] __findKeys (String prefix, int limit) throws SnappydbException;
+    private native String[] __findKeys (String prefix, int offset, int limit) throws SnappydbException;
 
-    private native String[] __findKeysBetween(String startPrefix, String endPrefix, int limit) throws SnappydbException;
+    private native String[] __findKeysBetween(String startPrefix, String endPrefix, int offset, int limit) throws SnappydbException;
 }

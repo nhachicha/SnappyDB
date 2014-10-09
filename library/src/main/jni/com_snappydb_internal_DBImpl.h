@@ -7,6 +7,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#undef com_snappydb_internal_DBImpl_LIMIT_MAX
+#define com_snappydb_internal_DBImpl_LIMIT_MAX 2147483639L
 /*
  * Class:     com_snappydb_internal_DBImpl
  * Method:    __close
@@ -186,18 +188,18 @@ JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1exists
 /*
  * Class:     com_snappydb_internal_DBImpl
  * Method:    __findKeys
- * Signature: (Ljava/lang/String;I)[Ljava/lang/String;
+ * Signature: (Ljava/lang/String;II)[Ljava/lang/String;
  */
 JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
-  (JNIEnv *, jobject, jstring, jint);
+  (JNIEnv *, jobject, jstring, jint, jint);
 
 /*
  * Class:     com_snappydb_internal_DBImpl
  * Method:    __findKeysBetween
- * Signature: (Ljava/lang/String;Ljava/lang/String;I)[Ljava/lang/String;
+ * Signature: (Ljava/lang/String;Ljava/lang/String;II)[Ljava/lang/String;
  */
 JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBetween
-  (JNIEnv *, jobject, jstring, jstring, jint);
+  (JNIEnv *, jobject, jstring, jstring, jint, jint);
 
 #ifdef __cplusplus
 }

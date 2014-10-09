@@ -742,7 +742,7 @@ JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1exists
 
 
 JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
-  (JNIEnv *env, jobject thiz, jstring jPrefix, jint limit) {
+  (JNIEnv *env, jobject thiz, jstring jPrefix, jint offset, jint limit) {
 
 	LOGI("find keys");
 
@@ -757,9 +757,12 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
 	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
 
 	int count = 0;
-	for (it->Seek(prefix); count++ < limit && it->Valid() && it->key().starts_with(prefix);
+	for (it->Seek(prefix); count < (offset + limit) && it->Valid() && it->key().starts_with(prefix);
 			it->Next()) {
-		result.push_back(it->key().ToString());
+        if (count >= offset) {
+    		result.push_back(it->key().ToString());
+    	}
+        ++count;
 	}
 
 	std::vector<std::string>::size_type n = result.size();
@@ -781,7 +784,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
 }
 
 JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBetween
-  (JNIEnv *env, jobject thiz, jstring jStartPrefix, jstring jEndPrefix, jint limit)  {
+  (JNIEnv *env, jobject thiz, jstring jStartPrefix, jstring jEndPrefix, jint offset, jint limit)  {
 
 	LOGI("find keys between range");
 
@@ -797,9 +800,12 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBet
 	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
 
 	int count = 0;
-	for (it->Seek(startPrefix); count++ < limit && it->Valid() && it->key().compare(endPrefix) <= 0;
+	for (it->Seek(startPrefix); count < (offset + limit) && it->Valid() && it->key().compare(endPrefix) <= 0;
 			it->Next()) {
-		result.push_back(it->key().ToString());
+		if (count >= offset) {
+    		result.push_back(it->key().ToString());
+    	}
+    	++count;
 	}
 
 	std::vector<std::string>::size_type n = result.size();
