@@ -96,8 +96,28 @@ public interface DB {
 	public boolean exists (String key) throws SnappydbException;
 
     public String[] findKeys(String prefix) throws SnappydbException;
+    public String[] findKeys(String prefix, int offset) throws SnappydbException;
+    public String[] findKeys(String prefix, int offset, int limit) throws SnappydbException;
+
+    public int countKeys(String prefix) throws SnappydbException;
 
     public String[] findKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
+    public String[] findKeysBetween(String startPrefix, String endPrefix, int offset) throws SnappydbException;
+    public String[] findKeysBetween(String startPrefix, String endPrefix, int offset, int limit) throws SnappydbException;
+
+    public int countKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
+
+    //***********************
+    //*      ITERATORS
+    //***********************
+    public KeyIterator allKeysIterator() throws SnappydbException;
+    public KeyIterator allKeysReverseIterator() throws SnappydbException;
+
+    public KeyIterator findKeysIterator(String prefix) throws SnappydbException;
+    public KeyIterator findKeysReverseIterator(String prefix) throws SnappydbException;
+
+    public KeyIterator findKeysBetweenIterator(String startPrefix, String endPrefix) throws SnappydbException;
+    public KeyIterator findKeysBetweenReverseIterator(String startPrefix, String endPrefix) throws SnappydbException;
 
     //*********************************
     //*      KRYO SERIALIZATION
