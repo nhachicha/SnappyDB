@@ -99,9 +99,13 @@ public interface DB {
     public String[] findKeys(String prefix, int offset) throws SnappydbException;
     public String[] findKeys(String prefix, int offset, int limit) throws SnappydbException;
 
+    public int countKeys(String prefix) throws SnappydbException;
+
     public String[] findKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
     public String[] findKeysBetween(String startPrefix, String endPrefix, int offset) throws SnappydbException;
     public String[] findKeysBetween(String startPrefix, String endPrefix, int offset, int limit) throws SnappydbException;
+
+    public int countKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
 
     //*********************************
     //*      KRYO SERIALIZATION

@@ -418,6 +418,13 @@ public class DBImpl implements DB {
     }
 
     @Override
+    public int countKeys(String prefix) throws SnappydbException {
+        checkPrefix(prefix);
+
+        return __countKeys(prefix);
+    }
+
+    @Override
     public String[] findKeysBetween(String startPrefix, String endPrefix)
             throws SnappydbException {
         return findKeysBetween(startPrefix, endPrefix, 0, LIMIT_MAX);
@@ -436,6 +443,14 @@ public class DBImpl implements DB {
         checkOffsetLimit(offset, limit);
 
         return __findKeysBetween(startPrefix, endPrefix, offset, limit);
+    }
+
+    @Override
+    public int countKeysBetween(String startPrefix, String endPrefix)
+            throws SnappydbException {
+        checkRange(startPrefix, endPrefix);
+
+        return __countKeysBetween(startPrefix, endPrefix);
     }
 
     //*********************************
@@ -535,5 +550,9 @@ public class DBImpl implements DB {
 
     private native String[] __findKeys (String prefix, int offset, int limit) throws SnappydbException;
 
+    private native int __countKeys (String prefix) throws SnappydbException;
+
     private native String[] __findKeysBetween(String startPrefix, String endPrefix, int offset, int limit) throws SnappydbException;
+
+    private native int __countKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
 }

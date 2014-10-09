@@ -783,8 +783,34 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
 	return ret;
 }
 
+JNIEXPORT jint JNICALL Java_com_snappydb_internal_DBImpl__1_1countKeys
+  (JNIEnv *env, jobject thiz, jstring jPrefix) {
+
+	LOGI("count keys");
+
+	if (!isDBopen) {
+		throwException (env, "database is not open");
+		return NULL;
+	}
+
+	const char* prefix = env->GetStringUTFChars(jPrefix, 0);
+
+	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
+
+	jint count = 0;
+	for (it->Seek(prefix); it->Valid() && it->key().starts_with(prefix);
+    		it->Next()) {
+    	++count;
+    }
+
+    env->ReleaseStringUTFChars(jPrefix, prefix);
+    delete it;
+
+    return count;
+}
+
 JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBetween
-  (JNIEnv *env, jobject thiz, jstring jStartPrefix, jstring jEndPrefix, jint offset, jint limit)  {
+  (JNIEnv *env, jobject thiz, jstring jStartPrefix, jstring jEndPrefix, jint offset, jint limit) {
 
 	LOGI("find keys between range");
 
@@ -827,4 +853,31 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBet
 	return ret;
 }
 
+JNIEXPORT jint JNICALL Java_com_snappydb_internal_DBImpl__1_1countKeysBetween
+  (JNIEnv *env, jobject thiz, jstring jStartPrefix, jstring jEndPrefix) {
+
+	LOGI("count keys between range");
+
+	if (!isDBopen) {
+		throwException (env, "database is not open");
+		return NULL;
+	}
+
+	const char* startPrefix = env->GetStringUTFChars(jStartPrefix, 0);
+	const char* endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
+
+	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
+
+	jint count = 0;
+	for (it->Seek(startPrefix); it->Valid() && it->key().compare(endPrefix) <= 0;
+			it->Next()) {
+    	++count;
+	}
+
+	env->ReleaseStringUTFChars(jStartPrefix, startPrefix);
+	env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+	delete it;
+
+	return count;
+}
 

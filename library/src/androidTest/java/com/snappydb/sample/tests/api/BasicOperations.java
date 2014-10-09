@@ -557,6 +557,8 @@ public class BasicOperations extends AndroidTestCase {
         snappyDB.put("key:cat3:subcatg2", "value:cat3:subcatg2");
         snappyDB.put("key:cat3:subcatg3", "value:cat3:subcatg3");
 
+        assertEquals(9, snappyDB.countKeys("key"));
+
         // return all keys starting with "key" 9
         String[] keys = snappyDB.findKeys("key");
         assertEquals(9, keys.length);
@@ -635,6 +637,8 @@ public class BasicOperations extends AndroidTestCase {
         assertEquals("key:cat3:subcatg2", keys[7]);
         assertEquals("key:cat3:subcatg3", keys[8]);
 
+        assertEquals(3, snappyDB.countKeys("key:cat1"));
+
         //return all keys starting with"key:cat1" 3
         keys = snappyDB.findKeys("key:cat1");
         assertEquals(3, keys.length);
@@ -702,6 +706,8 @@ public class BasicOperations extends AndroidTestCase {
 
         keys = snappyDB.findKeys("key:cat1:subcategory");
         assertEquals(0, keys.length);
+
+        assertEquals(3, snappyDB.countKeysBetween("key:cat1:subcatg1", "key:cat1:subcatg3"));
 
         // return all keys starting between [arg1, arg2)
         keys = snappyDB.findKeysBetween("key:cat1:subcatg1", "key:cat1:subcatg3");
