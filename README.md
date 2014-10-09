@@ -341,6 +341,14 @@ it = snappyDB.findKeysBetweenReverseIterator("android:09", "android:05");
 it.close();
 ```
 
+Here are the methods implemented in KeyIterator :
+```java
+public boolean hasNext(); // Whether or not this is the last key.
+public String next(); // Advance to the next key.
+public String[] next(int max); // Get an array of next keys (maximum max keys).
+void close() throws IOException; // Closes the iterator.
+```
+
 License
 --------
 SnappyDB is opensource, contribution and feedback are welcomed
