@@ -16,8 +16,6 @@
 
 package com.snappydb.sample.tests.api;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 

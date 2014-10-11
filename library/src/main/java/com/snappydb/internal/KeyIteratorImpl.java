@@ -8,7 +8,6 @@ import com.snappydb.SnappydbException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 class KeyIteratorImpl implements KeyIterator {
 
@@ -65,11 +64,10 @@ class KeyIteratorImpl implements KeyIterator {
 
     @Override
     public String next() {
+        if (nextKey == null) {
+            throw new NoSuchElementException();
+        }
         try {
-            if (nextKey == null) {
-                throw new NoSuchElementException();
-            }
-
             String key = nextKey;
             nextKey = db.__iteratorNextKey(ptr, endPrefix, reverse);
             return key;
