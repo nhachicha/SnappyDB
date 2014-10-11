@@ -6,7 +6,9 @@ import com.snappydb.KeyIterator;
 import com.snappydb.SnappydbException;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 class KeyIteratorImpl implements KeyIterator {
 
@@ -15,7 +17,6 @@ class KeyIteratorImpl implements KeyIterator {
     private final boolean reverse;
 
     private long ptr;
-
     private String nextKey;
 
     protected KeyIteratorImpl(DBImpl db, long ptr, String endPrefix, boolean reverse) {
@@ -45,15 +46,30 @@ class KeyIteratorImpl implements KeyIterator {
 
     @Override
     public boolean hasNext() {
-        return nextKey != null;
+        if (nextKey == null) {
+            if (ptr != 0) {
+                try {//auto close the Iterator (if the user is traversing the keys with a for-each loop)
+                    close();
+                    ptr = 0;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            return false;
+
+        } else {
+            return true;
+        }
     }
 
     @Override
     public String next() {
-        if (nextKey == null) {
-            throw new NoSuchElementException();
-        }
         try {
+            if (nextKey == null) {
+                throw new NoSuchElementException();
+            }
+
             String key = nextKey;
             nextKey = db.__iteratorNextKey(ptr, endPrefix, reverse);
             return key;
@@ -79,5 +95,10 @@ class KeyIteratorImpl implements KeyIterator {
     @Override
     public void remove() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Iterator<String> iterator() {
+        return this;
     }
 }

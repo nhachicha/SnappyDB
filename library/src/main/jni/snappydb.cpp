@@ -768,7 +768,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
 	std::vector<std::string>::size_type n = result.size();
 	jobjectArray ret= (jobjectArray)env->NewObjectArray(n,
 		         env->FindClass("java/lang/String"),
-		         env->NewStringUTF(""));
+		         NULL);
 
 	jstring str;
 	for (int i=0; i<n ; i++) {
@@ -948,8 +948,8 @@ JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNextKey
 	if (jEndPrefix) {
 		const char* endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
 		if ((!reverse && it->key().compare(endPrefix) > 0) || (reverse && it->key().compare(endPrefix) < 0)) {
-			return NULL;
 			env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+			return NULL;
 		}
 		env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
 	}
@@ -983,8 +983,8 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNex
 	while (count < max && it->Valid() && (!endPrefix || (!reverse && it->key().compare(endPrefix) <= 0) || (reverse && it->key().compare(endPrefix) >= 0))) {
 		result.push_back(it->key().ToString());
     	++count;
-	if (reverse) { it->Prev(); }
-	else { it->Next(); }
+        if (reverse) { it->Prev(); }
+        else { it->Next(); }
 	}
 
 	if (jEndPrefix) {
@@ -1019,8 +1019,8 @@ JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorKey
 	if (jEndPrefix) {
 		const char* endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
 		if ((!reverse && it->key().compare(endPrefix) > 0) || (reverse && it->key().compare(endPrefix) < 0)) {
-			return NULL;
 			env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+			return NULL;
 		}
 		env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
 	}
