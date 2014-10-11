@@ -4,7 +4,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.snappydb'
-version = '0.4.0'
+version = '0.5.0'
 ext.packaging = 'aar'
 def artifact_id = 'snappydb-lib'
 def sonatypeRepositoryUrl
@@ -59,7 +59,7 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
+    gradleVersion = '2.1'
 }
 
 
