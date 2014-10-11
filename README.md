@@ -73,6 +73,10 @@ Common tasks snippets
 - [Check key](#check-key)
 - [Delete key](#delete-key)
 - [Keys Search](#keys-search)
+- [Iterators](#iterators)
+- [Keys Count](#keys-count)
+
+
 
 
 ### Create database
@@ -339,6 +343,11 @@ it.close();
 it = snappyDB.findKeysBetweenReverseIterator("android:09", "android:05");
 /*...*/
 it.close();
+
+// Using For-each
+for (String key : snappyDB.findKeysIterator("android")) {
+  /*...*/
+}
 ```
 
 Here are the methods implemented in KeyIterator :
