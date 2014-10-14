@@ -1033,6 +1033,12 @@ public class BasicOperations extends AndroidTestCase {
                             "android:19"};
 
         int i=0;
+        for (String keys[] : snappyDB.findKeysIterator("android").byBatch(1/*please don't do this :)*/)) {
+            assertEquals(1, keys.length);
+            assertEquals(expected[i++], keys[0]);
+        }
+
+        i=0;
         for (String keys[] : snappyDB.findKeysIterator("android").byBatch(4)) {
             if (i == 8)
                 assertEquals(1, keys.length);
