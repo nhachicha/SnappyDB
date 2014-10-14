@@ -73,8 +73,8 @@ Common tasks snippets
 - [Check key](#check-key)
 - [Delete key](#delete-key)
 - [Keys Search](#keys-search)
-- [Iterators](#iterators)
 - [Keys Count](#keys-count)
+- [Iterators](#iterators)
 
 
 
@@ -316,8 +316,6 @@ Iterators work on DB snapshot, which means that if you add or delete value in / 
 
 Please note that iterators given by the SnappyDB are closeable and need to be closed once finished with. As iterators work on a DB snapshot, not closing them is a serious memory leak.
 
-Please note that you *should not* use an iterator to load all values at once. To do that, using the array based APIs (findKeys and findKeysBetween) is a lot more efficient. Iterators should only be used on large collection for paging access.
-
 ```java
 // An iterator to all keys
 it = snappyDB.allKeysIterator();
@@ -343,20 +341,28 @@ it.close();
 it = snappyDB.findKeysBetweenReverseIterator("android:09", "android:05");
 /*...*/
 it.close();
-
-// Using For-each
-for (String key : snappyDB.findKeysIterator("android")) {
-  /*...*/
-}
 ```
 
 Here are the methods implemented in KeyIterator :
 ```java
 public boolean hasNext(); // Whether or not this is the last key.
-public String next(); // Advance to the next key.
-public String[] next(int max); // Get an array of next keys (maximum max keys).
-void close() throws IOException; // Closes the iterator.
+public String[] next(int max); // Get an array of next keys (maximum [max] keys).
+void close(); // Closes the iterator.
+Iterable<String[]> byBatch(int size); // Get an iterable of key batch, each batch of maximum [size] keys.
 ```
+
+Iterators work on key batchs (key arrays) and not directly on keys. You may iterate on all keys with the form:
+```java
+for (String[] batch : db.findKeysIterator("android").byBatch(BATCH_SIZE)) {
+    for (String key : batch) {
+        /*...*/
+    }
+}
+```
+
+Please note that you *should* use the `byBatch` iterable to process all keys *only* on large collections. On reasonably small collections, using the array based APIs (`findKeys` and `findKeysBetween`) with the form `for (String key : db.findKeys("android"))` is *a lot* more efficient.  
+Iterators should only be used to process large collections or for collection paging view / access.
+
 
 License
 --------

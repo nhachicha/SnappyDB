@@ -5,7 +5,6 @@ import android.util.Log;
 import com.snappydb.KeyIterator;
 import com.snappydb.SnappydbException;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -16,7 +15,7 @@ class KeyIteratorImpl implements KeyIterator {
     private final boolean reverse;
 
     private long ptr;
-    private String nextKey;
+    private boolean isNextValid;
 
     protected KeyIteratorImpl(DBImpl db, long ptr, String endPrefix, boolean reverse) {
         this.db = db;
@@ -24,14 +23,16 @@ class KeyIteratorImpl implements KeyIterator {
         this.endPrefix = endPrefix;
         this.reverse = reverse;
 
-        nextKey = db.__iteratorKey(ptr, endPrefix, reverse);
+        isNextValid = db.__iteratorIsValid(ptr, endPrefix, reverse);
     }
 
     @Override
-    public void close() throws IOException {
-        if (ptr != 0)
+    public void close() {
+        if (ptr != 0) {
             db.__iteratorClose(ptr);
+        }
         ptr = 0;
+        isNextValid = false;
     }
 
     @Override
@@ -45,58 +46,57 @@ class KeyIteratorImpl implements KeyIterator {
 
     @Override
     public boolean hasNext() {
-        if (nextKey == null) {
-            if (ptr != 0) {
-                try {//auto close the Iterator (if the user is traversing the keys with a for-each loop)
-                    close();
-                    ptr = 0;
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            return false;
-
-        } else {
-            return true;
-        }
-    }
-
-    @Override
-    public String next() {
-        if (nextKey == null) {
-            throw new NoSuchElementException();
-        }
-        try {
-            String key = nextKey;
-            nextKey = db.__iteratorNextKey(ptr, endPrefix, reverse);
-            return key;
-        } catch (SnappydbException e) {
-            throw new RuntimeException(e);
-        }
+        return isNextValid;
     }
 
     @Override
     public String[] next(int max) {
-        if (nextKey == null) {
+        if (!isNextValid) {
             throw new NoSuchElementException();
         }
         try {
             String[] keys = db.__iteratorNextArray(ptr, endPrefix, reverse, max);
-            nextKey = db.__iteratorKey(ptr, endPrefix, reverse);
+            isNextValid = db.__iteratorIsValid(ptr, endPrefix, reverse);
+            if (!isNextValid) {
+                close();
+            }
             return keys;
         } catch (SnappydbException e) {
             throw new RuntimeException(e);
         }
     }
 
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
+    private class BatchIterableImpl implements Iterable<String[]>, Iterator<String[]> {
+
+        private int size;
+
+        private BatchIterableImpl(int size) {
+            this.size = size;
+        }
+
+        @Override
+        public Iterator<String[]> iterator() {
+            return this;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return KeyIteratorImpl.this.hasNext();
+        }
+
+        @Override
+        public String[] next() {
+            return KeyIteratorImpl.this.next(size);
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
     }
 
     @Override
-    public Iterator<String> iterator() {
-        return this;
+    public Iterable<String[]> byBatch(int size) {
+        return new BatchIterableImpl(size);
     }
 }

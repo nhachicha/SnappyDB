@@ -892,15 +892,16 @@ public class BasicOperations extends AndroidTestCase {
 
         // An iterator to all keys
         it = snappyDB.allKeysIterator();
-        assertEquals("android:03", it.next());
-        assertEquals("android:04", it.next());
-        keys = it.next(3); // Returns the next 3 in a batch
-        assertEquals(3, keys.length);
+        keys = it.next(2);
+        assertEquals("android:03", keys[0]);
+        assertEquals("android:04", keys[1]);
+        keys = it.next(5); // Returns the next 3 in a batch
+        assertEquals(5, keys.length);
         assertEquals("android:05", keys[0]);
         assertEquals("android:08", keys[1]);
         assertEquals("android:09", keys[2]);
-        assertEquals("android:11", it.next());
-        assertEquals("android:14", it.next());
+        assertEquals("android:11", keys[3]);
+        assertEquals("android:14", keys[4]);
         keys = it.next(3);
         assertEquals(2, keys.length);
         assertEquals("android:16", keys[0]);
@@ -910,15 +911,15 @@ public class BasicOperations extends AndroidTestCase {
 
         // An iterator to all keys in reverse order
         it = snappyDB.allKeysReverseIterator();
-        assertEquals("android:19", it.next());
-        assertEquals("android:16", it.next());
-        keys = it.next(3); // Returns the next 3 in a batch
-        assertEquals(3, keys.length);
-        assertEquals("android:14", keys[0]);
-        assertEquals("android:11", keys[1]);
-        assertEquals("android:09", keys[2]);
-        assertEquals("android:08", it.next());
-        assertEquals("android:05", it.next());
+        keys = it.next(7); // Returns the next 3 in a batch
+        assertEquals(7, keys.length);
+        assertEquals("android:19", keys[0]);
+        assertEquals("android:16", keys[1]);
+        assertEquals("android:14", keys[2]);
+        assertEquals("android:11", keys[3]);
+        assertEquals("android:09", keys[4]);
+        assertEquals("android:08", keys[5]);
+        assertEquals("android:05", keys[6]);
         keys = it.next(3);
         assertEquals(2, keys.length);
         assertEquals("android:04", keys[0]);
@@ -928,64 +929,76 @@ public class BasicOperations extends AndroidTestCase {
 
         // An iterator to all keys including and after android:14
         it = snappyDB.findKeysIterator("android:14");
-        assertEquals("android:14", it.next());
-        assertEquals("android:16", it.next());
-        assertEquals("android:19", it.next());
+        keys = it.next(10);
+        assertEquals(3, keys.length);
+        assertEquals("android:14", keys[0]);
+        assertEquals("android:16", keys[1]);
+        assertEquals("android:19", keys[2]);
         assertFalse(it.hasNext());
         it.close();
 
         // An iterator to all keys including and after android:13
         it = snappyDB.findKeysIterator("android:13");
-        assertEquals("android:14", it.next());
-        assertEquals("android:16", it.next());
-        assertEquals("android:19", it.next());
+        keys = it.next(3);
+        assertEquals(3, keys.length);
+        assertEquals("android:14", keys[0]);
+        assertEquals("android:16", keys[1]);
+        assertEquals("android:19", keys[2]);
         assertFalse(it.hasNext());
         it.close();
 
         // An iterator to all keys from android:05 to android:10
         it = snappyDB.findKeysBetweenIterator("android:05", "android:10");
-        assertEquals("android:05", it.next());
-        keys = it.next(2);
-        assertEquals(2, keys.length);
-        assertEquals("android:08", keys[0]);
-        assertEquals("android:09", keys[1]);
+        keys = it.next(3);
+        assertEquals(3, keys.length);
+        assertEquals("android:05", keys[0]);
+        assertEquals("android:08", keys[1]);
+        assertEquals("android:09", keys[2]);
         assertFalse(it.hasNext());
         it.close();
 
         // An iterator to all keys from android:09 to android:05 in reverse order
         it = snappyDB.findKeysBetweenReverseIterator("android:09", "android:05");
-        assertEquals("android:09", it.next());
-        assertEquals("android:08", it.next());
-        assertEquals("android:05", it.next());
+        keys = it.next(3);
+        assertEquals(3, keys.length);
+        assertEquals("android:09", keys[0]);
+        assertEquals("android:08", keys[1]);
+        assertEquals("android:05", keys[2]);
         assertFalse(it.hasNext());
         it.close();
 
         // An iterator to all keys from android:10 to android:07 in reverse order
         it = snappyDB.findKeysBetweenReverseIterator("android:10", "android:07");
-        assertEquals("android:09", it.next());
-        assertEquals("android:08", it.next());
+        keys = it.next(3);
+        assertEquals(2, keys.length);
+        assertEquals("android:09", keys[0]);
+        assertEquals("android:08", keys[1]);
         assertFalse(it.hasNext());
         it.close();
 
         // All keys including and before android:10
         it = snappyDB.findKeysReverseIterator("android:10");
-        assertEquals("android:09", it.next());
-        assertEquals("android:08", it.next());
-        assertEquals("android:05", it.next());
-        assertEquals("android:04", it.next());
-        assertEquals("android:03", it.next());
+        keys = it.next(5);
+        assertEquals(5, keys.length);
+        assertEquals("android:09", keys[0]);
+        assertEquals("android:08", keys[1]);
+        assertEquals("android:05", keys[2]);
+        assertEquals("android:04", keys[3]);
+        assertEquals("android:03", keys[4]);
         assertFalse(it.hasNext());
         it.close();
 
         // A reverse iterator to all keys before android:99
         it = snappyDB.findKeysReverseIterator("android:99");
-        assertEquals("android:19", it.next());
-        assertEquals("android:16", it.next());
-        assertEquals("android:14", it.next());
-        assertEquals("android:11", it.next());
-        assertEquals("android:09", it.next());
-        assertEquals("android:08", it.next());
-        keys = it.next(3);
+        keys = it.next(6);
+        assertEquals(6, keys.length);
+        assertEquals("android:19", keys[0]);
+        assertEquals("android:16", keys[1]);
+        assertEquals("android:14", keys[2]);
+        assertEquals("android:11", keys[3]);
+        assertEquals("android:09", keys[4]);
+        assertEquals("android:08", keys[5]);
+        keys = it.next(6);
         assertEquals(3, keys.length);
         assertEquals("android:05", keys[0]);
         assertEquals("android:04", keys[1]);
@@ -1020,16 +1033,24 @@ public class BasicOperations extends AndroidTestCase {
                             "android:19"};
 
         int i=0;
-        for (String key : snappyDB.findKeysIterator("android")) {
-            assertEquals(expected[i++], key);
+        for (String keys[] : snappyDB.findKeysIterator("android").byBatch(4)) {
+            if (i == 8)
+                assertEquals(1, keys.length);
+            else
+                assertEquals(4, keys.length);
+            for (String key : keys) {
+                assertEquals(expected[i++], key);
+            }
         }
 
         //Two Iterators
-        for (String key : snappyDB.findKeysIterator("android")) {
+        for (String[] keys : snappyDB.findKeysIterator("android").byBatch(3)) {
+            for (String key : keys) {
                 i = 0;
-                for (String subkey:snappyDB.findKeysBetween("android", key)) {
+                for (String subkey : snappyDB.findKeysBetween("android", key)) {
                     assertEquals(expected[i++], subkey);
                 }
+            }
         }
 
         snappyDB.destroy();
