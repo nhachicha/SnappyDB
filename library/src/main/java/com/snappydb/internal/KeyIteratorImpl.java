@@ -28,9 +28,11 @@ class KeyIteratorImpl implements KeyIterator {
 
     @Override
     public void close() {
-        if (ptr != 0)
+        if (ptr != 0) {
             db.__iteratorClose(ptr);
+        }
         ptr = 0;
+        isNextValid = false;
     }
 
     @Override
@@ -44,16 +46,7 @@ class KeyIteratorImpl implements KeyIterator {
 
     @Override
     public boolean hasNext() {
-        if (!isNextValid) {
-            if (ptr != 0) {
-                close();
-            }
-
-            return false;
-
-        } else {
-            return true;
-        }
+        return isNextValid;
     }
 
     @Override
@@ -64,6 +57,9 @@ class KeyIteratorImpl implements KeyIterator {
         try {
             String[] keys = db.__iteratorNextArray(ptr, endPrefix, reverse, max);
             isNextValid = db.__iteratorIsValid(ptr, endPrefix, reverse);
+            if (!isNextValid) {
+                close();
+            }
             return keys;
         } catch (SnappydbException e) {
             throw new RuntimeException(e);
