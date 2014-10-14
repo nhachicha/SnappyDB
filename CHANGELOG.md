@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+Version 0.5.0 *(2014-10-14)*
+----------------------------
+ * Add offset & limit for keys search operations
+
+ * Efficient keys count
+ 
+ * Iterators for pagination & traversing a large keys collection
+ 
+ * Update to gradle 2.1 
+ 
+ 
 Version 0.4.0 *(2014-09-13)*
 ----------------------------
 
