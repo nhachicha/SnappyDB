@@ -922,40 +922,6 @@ JNIEXPORT jlong JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysIterator
 	return (jlong) it;
 }
 
-JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNextKey
-  (JNIEnv *env, jobject thiz, jlong ptr, jstring jEndPrefix, jboolean reverse) {
-
-	LOGI("iterator next key");
-
-	if (!isDBopen) {
-		throwException (env, "database is not open");
-		return NULL;
-	}
-
-	leveldb::Iterator* it = (leveldb::Iterator*) ptr;
-
-	if (!it->Valid()) {
-		throwException (env, "iterator is not valid");
-		return NULL;
-	}
-
-	if (reverse) { it->Prev(); }
-	else { it->Next(); }
-
-	if (!it->Valid()) {
-		return NULL;
-	}
-	if (jEndPrefix) {
-		const char* endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
-		if ((!reverse && it->key().compare(endPrefix) > 0) || (reverse && it->key().compare(endPrefix) < 0)) {
-			env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
-			return NULL;
-		}
-		env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
-	}
-	return env->NewStringUTF(it->key().ToString().c_str());
-}
-
 JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNextArray
   (JNIEnv *env, jobject thiz, jlong ptr, jstring jEndPrefix, jboolean reverse, jint max) {
 
@@ -1006,25 +972,25 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNex
 	return ret;
 }
 
-JNIEXPORT jstring JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorKey
+JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorIsValid
   (JNIEnv *env, jobject thiz, jlong ptr, jstring jEndPrefix, jboolean reverse) {
 
-	LOGI("iterator key");
+	LOGI("iterator is valid");
 
 	leveldb::Iterator* it = (leveldb::Iterator*) ptr;
 
 	if (!it->Valid()) {
-		return NULL;
+		return false;
 	}
 	if (jEndPrefix) {
 		const char* endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
 		if ((!reverse && it->key().compare(endPrefix) > 0) || (reverse && it->key().compare(endPrefix) < 0)) {
 			env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
-			return NULL;
+			return false;
 		}
 		env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
 	}
-	return env->NewStringUTF(it->key().ToString().c_str());
+	return true;
 }
 
 JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorClose

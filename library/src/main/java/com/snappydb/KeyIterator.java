@@ -1,10 +1,15 @@
 package com.snappydb;
 
 import java.io.Closeable;
-import java.util.Iterator;
 
-public interface KeyIterator extends Iterable<String>, Iterator<String>, Closeable {
+public interface KeyIterator extends Closeable {
+
+    public boolean hasNext();
 
     public String[] next(int max);
+
+    public Iterable<String[]> byBatch(int size);
+
+    void close();
 
 }
