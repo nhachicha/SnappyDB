@@ -742,7 +742,7 @@ JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1exists
 
 
 JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
-  (JNIEnv *env, jobject thiz, jstring jPrefix) {
+  (JNIEnv *env, jobject thiz, jstring jPrefix, jint offset, jint limit) {
 
 	LOGI("find keys");
 
@@ -756,15 +756,19 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
 	std::vector<std::string> result;
 	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
 
-	for (it->Seek(prefix); it->Valid() && it->key().starts_with(prefix);
+	int count = 0;
+	for (it->Seek(prefix); count < (offset + limit) && it->Valid() && it->key().starts_with(prefix);
 			it->Next()) {
-		result.push_back(it->key().ToString());
+        if (count >= offset) {
+    		result.push_back(it->key().ToString());
+    	}
+        ++count;
 	}
 
 	std::vector<std::string>::size_type n = result.size();
 	jobjectArray ret= (jobjectArray)env->NewObjectArray(n,
 		         env->FindClass("java/lang/String"),
-		         env->NewStringUTF(""));
+		         NULL);
 
 	jstring str;
 	for (int i=0; i<n ; i++) {
@@ -779,8 +783,34 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
 	return ret;
 }
 
+JNIEXPORT jint JNICALL Java_com_snappydb_internal_DBImpl__1_1countKeys
+  (JNIEnv *env, jobject thiz, jstring jPrefix) {
+
+	LOGI("count keys");
+
+	if (!isDBopen) {
+		throwException (env, "database is not open");
+		return NULL;
+	}
+
+	const char* prefix = env->GetStringUTFChars(jPrefix, 0);
+
+	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
+
+	jint count = 0;
+	for (it->Seek(prefix); it->Valid() && it->key().starts_with(prefix);
+    		it->Next()) {
+    	++count;
+    }
+
+    env->ReleaseStringUTFChars(jPrefix, prefix);
+    delete it;
+
+    return count;
+}
+
 JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBetween
-  (JNIEnv *env, jobject thiz, jstring jStartPrefix, jstring jEndPrefix)  {
+  (JNIEnv *env, jobject thiz, jstring jStartPrefix, jstring jEndPrefix, jint offset, jint limit) {
 
 	LOGI("find keys between range");
 
@@ -795,9 +825,13 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBet
 	std::vector<std::string> result;
 	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
 
-	for (it->Seek(startPrefix); it->Valid() && it->key().compare(endPrefix) <= 0; it->Next()) {
-		result.push_back(it->key().ToString());
-
+	int count = 0;
+	for (it->Seek(startPrefix); count < (offset + limit) && it->Valid() && it->key().compare(endPrefix) <= 0;
+			it->Next()) {
+		if (count >= offset) {
+    		result.push_back(it->key().ToString());
+    	}
+    	++count;
 	}
 
 	std::vector<std::string>::size_type n = result.size();
@@ -819,4 +853,152 @@ JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBet
 	return ret;
 }
 
+JNIEXPORT jint JNICALL Java_com_snappydb_internal_DBImpl__1_1countKeysBetween
+  (JNIEnv *env, jobject thiz, jstring jStartPrefix, jstring jEndPrefix) {
 
+	LOGI("count keys between range");
+
+	if (!isDBopen) {
+		throwException (env, "database is not open");
+		return NULL;
+	}
+
+	const char* startPrefix = env->GetStringUTFChars(jStartPrefix, 0);
+	const char* endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
+
+	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
+
+	jint count = 0;
+	for (it->Seek(startPrefix); it->Valid() && it->key().compare(endPrefix) <= 0;
+			it->Next()) {
+    	++count;
+	}
+
+	env->ReleaseStringUTFChars(jStartPrefix, startPrefix);
+	env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+	delete it;
+
+	return count;
+}
+
+JNIEXPORT jlong JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysIterator
+  (JNIEnv *env, jobject thiz, jstring jPrefix, jboolean reverse) {
+
+	LOGI("find keys iterator");
+
+	if (!isDBopen) {
+		throwException (env, "database is not open");
+		return NULL;
+	}
+
+	leveldb::Iterator* it = db->NewIterator(leveldb::ReadOptions());
+
+	if (jPrefix) {
+		const char* prefix = env->GetStringUTFChars(jPrefix, 0);
+		LOGI("(%p) Seeking prefix: %s", it, prefix);
+		it->Seek(prefix);
+	    env->ReleaseStringUTFChars(jPrefix, prefix);
+	} else if (reverse) {
+		it->SeekToLast();
+	} else {
+		it->SeekToFirst();
+	}
+
+	// When seeking in a leveldb iterator, if the key does not exists, it is positioned to the key
+	// immediately *after* what we are seeking or invalid. In the case of a reverse iterator, we
+	// want the key immediately *before* or the last.
+	if (reverse) {
+		if (!it->Valid()) {
+			it->SeekToLast();
+		} else if (jPrefix) {
+			const char* prefix = env->GetStringUTFChars(jPrefix, 0);
+			if (it->key().compare(prefix) > 0) {
+				it->Prev();
+			}
+			env->ReleaseStringUTFChars(jPrefix, prefix);
+		}
+	}
+
+	return (jlong) it;
+}
+
+JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNextArray
+  (JNIEnv *env, jobject thiz, jlong ptr, jstring jEndPrefix, jboolean reverse, jint max) {
+
+	LOGI("iterator next array");
+
+	if (!isDBopen) {
+		throwException (env, "database is not open");
+		return NULL;
+	}
+
+	std::vector<std::string> result;
+	leveldb::Iterator* it = (leveldb::Iterator*) ptr;
+
+	if (!it->Valid()) {
+		throwException (env, "iterator is not valid");
+		return NULL;
+	}
+
+	const char* endPrefix = NULL;
+	if (jEndPrefix) {
+		endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
+	}
+
+	int count = 0;
+	while (count < max && it->Valid() && (!endPrefix || (!reverse && it->key().compare(endPrefix) <= 0) || (reverse && it->key().compare(endPrefix) >= 0))) {
+		result.push_back(it->key().ToString());
+    	++count;
+        if (reverse) { it->Prev(); }
+        else { it->Next(); }
+	}
+
+	if (jEndPrefix) {
+		env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+	}
+
+	std::vector<std::string>::size_type n = result.size();
+	jobjectArray ret= (jobjectArray)env->NewObjectArray(n,
+		         env->FindClass("java/lang/String"),
+		         env->NewStringUTF(""));
+
+	jstring str;
+	for (int i=0; i<n ; i++) {
+		str = env->NewStringUTF(result[i].c_str());
+		env->SetObjectArrayElement(ret, i, str);
+		env->DeleteLocalRef(str);
+	}
+
+	return ret;
+}
+
+JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorIsValid
+  (JNIEnv *env, jobject thiz, jlong ptr, jstring jEndPrefix, jboolean reverse) {
+
+	LOGI("iterator is valid");
+
+	leveldb::Iterator* it = (leveldb::Iterator*) ptr;
+
+	if (!it->Valid()) {
+		return false;
+	}
+	if (jEndPrefix) {
+		const char* endPrefix = env->GetStringUTFChars(jEndPrefix, 0);
+		if ((!reverse && it->key().compare(endPrefix) > 0) || (reverse && it->key().compare(endPrefix) < 0)) {
+			env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+			return false;
+		}
+		env->ReleaseStringUTFChars(jEndPrefix, endPrefix);
+	}
+	return true;
+}
+
+JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorClose
+  (JNIEnv *env, jobject thiz, jlong ptr) {
+
+	LOGI("iterator delete");
+
+	leveldb::Iterator* it = (leveldb::Iterator*) ptr;
+
+	delete it;
+}

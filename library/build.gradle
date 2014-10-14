@@ -4,7 +4,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.snappydb'
-version = '0.4.0'
+version = '0.5.0'
 ext.packaging = 'aar'
 def artifact_id = 'snappydb-lib'
 def sonatypeRepositoryUrl
@@ -59,7 +59,7 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.12'
+    gradleVersion = '2.1'
 }
 
 
@@ -78,8 +78,9 @@ signing {
 task androidJavadocs(type: Javadoc) {
     options {
         linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
+
     }
-    source = android.sourceSets.main.java
+    source = "src/main/java"
     classpath += project.files(project.android.getBootClasspath().join(File.pathSeparator))
 }
 
@@ -90,7 +91,7 @@ task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
 
 task androidSourcesJar(type: Jar) {
     classifier = 'sources'
-    from android.sourceSets.main.java
+    from "src/main/java"
 }
 
 artifacts {

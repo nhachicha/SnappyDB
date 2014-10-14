@@ -7,6 +7,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+#undef com_snappydb_internal_DBImpl_LIMIT_MAX
+#define com_snappydb_internal_DBImpl_LIMIT_MAX 2147483639L
 /*
  * Class:     com_snappydb_internal_DBImpl
  * Method:    __close
@@ -186,18 +188,66 @@ JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1exists
 /*
  * Class:     com_snappydb_internal_DBImpl
  * Method:    __findKeys
- * Signature: (Ljava/lang/String;)[Ljava/lang/String;
+ * Signature: (Ljava/lang/String;II)[Ljava/lang/String;
  */
 JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeys
+  (JNIEnv *, jobject, jstring, jint, jint);
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __countKeys
+ * Signature: (Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_snappydb_internal_DBImpl__1_1countKeys
   (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     com_snappydb_internal_DBImpl
  * Method:    __findKeysBetween
- * Signature: (Ljava/lang/String;Ljava/lang/String;)[Ljava/lang/String;
+ * Signature: (Ljava/lang/String;Ljava/lang/String;II)[Ljava/lang/String;
  */
 JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysBetween
+  (JNIEnv *, jobject, jstring, jstring, jint, jint);
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __countKeysBetween
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_snappydb_internal_DBImpl__1_1countKeysBetween
   (JNIEnv *, jobject, jstring, jstring);
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __findKeysIterator
+ * Signature: (Ljava/lang/String;Z)J
+ */
+JNIEXPORT jlong JNICALL Java_com_snappydb_internal_DBImpl__1_1findKeysIterator
+  (JNIEnv *, jobject, jstring, jboolean);
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __iteratorNextArray
+ * Signature: (JLjava/lang/String;ZI)[Ljava/lang/String;
+ */
+JNIEXPORT jobjectArray JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorNextArray
+  (JNIEnv *, jobject, jlong, jstring, jboolean, jint);
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __iteratorIsValid
+ * Signature: (JLjava/lang/String;Z)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorIsValid
+  (JNIEnv *, jobject, jlong, jstring, jboolean);
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
+ * Method:    __iteratorClose
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1iteratorClose
+  (JNIEnv *, jobject, jlong);
 
 #ifdef __cplusplus
 }
