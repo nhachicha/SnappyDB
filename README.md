@@ -28,7 +28,7 @@ try {
 	snappydb.put("books", new String[]{"One Shot", "Tripwire", "61 Hours"}); 
 	
 	String 	 name   =  snappydb.get("name");
-	int 	 age    =  snappydb.getInt("age");
+	int 	   age    =  snappydb.getInt("age");
 	boolean  single =  snappydb.getBoolean("single");
 	String[] books  =  snappydb.getArray("books", String.class);// get array of string
 		
@@ -49,7 +49,7 @@ SnappyDB uses native code for performance, it's available as an [Android Library
 
 ```groovy
 dependencies {
-    compile 'com.snappydb:snappydb-lib:0.4.0'
+    compile 'com.snappydb:snappydb-lib:0.5.0'
     compile 'com.esotericsoftware.kryo:kryo:2.24.0'
 }
 ```
