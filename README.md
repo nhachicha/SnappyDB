@@ -54,6 +54,22 @@ dependencies {
 }
 ```
 
+or
+
+**Manual:**
+ * Download JAR file and other folders from [here](https://github.com/nhachicha/SnappyDB/tree/master/dist)
+ * Put all the files and folders in the **libs** subfolder of your Android project
+```
+├── |── snappydb-0.5.0.jar
+    |── armeabi
+    │   └── libsnappydb-native.so
+    ├── armeabi-v7a
+    │   └── libsnappydb-native.so
+    ├── mips
+    │   └── libsnappydb-native.so
+    └── x86
+        └── libsnappydb-native.so
+```
 Cookbook
 ---------
 
