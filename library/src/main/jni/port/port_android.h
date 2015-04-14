@@ -10,7 +10,6 @@
 #include <endian.h>
 #include <pthread.h>
 #include <stdint.h>
-//#include <cstdatomic>
 #include <atomic>
 #include <string>
 #include <cctype>
@@ -21,12 +20,6 @@
 // _BYTE_ORDER must be used instead of __BYTE_ORDER on Android.
 // See http://code.google.com/p/android/issues/detail?id=39824
 #define PLATFORM_IS_LITTLE_ENDIAN  (_BYTE_ORDER == _LITTLE_ENDIAN)
-
-#if defined(OS_ANDROID) && __ANDROID_API__ < 9
-// fdatasync() was only introduced in API level 9 on Android. Use fsync()
-// when targetting older platforms.
-#define fdatasync fsync
-#endif
 
 
 // Collapse the plethora of ARM flavors available to an easier to manage set
