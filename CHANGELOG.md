@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+Version 0.5.1 *(2015-04-15)*
+----------------------------
+ * Providing 64-bit ABIs
+
+ * Targeting android-9 as minSdk (NDK)
+
+ * Update build tools: Gradle "2.2", Android plugin "1.1.3", compileSdkVersion "22", buildToolsVersion "22.0.1"
+
+
 Version 0.5.0 *(2014-10-14)*
 ----------------------------
  * Add offset & limit for keys search operations

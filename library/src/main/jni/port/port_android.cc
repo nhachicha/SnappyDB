@@ -18,10 +18,6 @@ size_t fwrite_unlocked(const void *a, size_t b, size_t c, FILE *d) {
 int fflush_unlocked(FILE *f) {
   return fflush(f);
 }
-
-int fdatasync(int fd) {
-  return fsync(fd);
-}
 }
 
 namespace leveldb {
