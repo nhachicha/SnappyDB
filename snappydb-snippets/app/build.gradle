@@ -12,6 +12,7 @@ buildscript {
 repositories {
     jcenter()
     maven { url 'http://download.crashlytics.com/maven' }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots"}
 }
 
 apply plugin: 'com.android.application'
@@ -49,7 +50,8 @@ android {
 }
 
 dependencies {
-    compile 'com.snappydb:snappydb-lib:0.4.0'
+    compile 'com.snappydb:snappydb-lib:0.5.2-SNAPSHOT'
+   // compile project (':library')
     compile 'com.esotericsoftware.kryo:kryo:2.24.0'
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.crashlytics.android:crashlytics:1.1.13'

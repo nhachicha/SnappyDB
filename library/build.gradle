@@ -4,7 +4,7 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.snappydb'
-version = '0.5.1'
+version = '0.5.2-SNAPSHOT'
 ext.packaging = 'aar'
 def artifact_id = 'snappydb-lib'
 def sonatypeRepositoryUrl
@@ -109,12 +109,12 @@ uploadArchives {
             pom.artifactId = artifact_id
 
             /*Uncomment to publish to Sonatype*/
-//            repository(url: sonatypeRepositoryUrl) {
-//                authentication(userName: sonatypeUsername, password: sonatypePassword)
-//            }
+            repository(url: sonatypeRepositoryUrl) {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
 
             /*Uncomment to publish to local maven*/
-            repository(url: "file://${System.env.HOME}/.m2/repository/")
+            //repository(url: "file://${System.env.HOME}/.m2/repository/")
 
             pom.project {
                 name 'SnappyDB'

@@ -6,7 +6,6 @@
 
 #ifndef STORAGE_LEVELDB_PORT_PORT_ANDROID_H_
 #define STORAGE_LEVELDB_PORT_PORT_ANDROID_H_
-#include "debug.h";
 #include <endian.h>
 #include <pthread.h>
 #include <stdint.h>
@@ -14,6 +13,8 @@
 #include <string>
 #include <cctype>
 #include "../snappy/snappy.h"
+
+
 
 
 // Due to a bug in the NDK x86 <sys/endian.h> definition,
@@ -35,8 +36,6 @@
     defined(__ARM_ARCH_7A__)
 #define ARMV6_OR_7 1
 #endif
-
-
 
 extern "C" {
   size_t fread_unlocked(void *a, size_t b, size_t c, FILE *d);
@@ -103,12 +102,11 @@ class AtomicPointer {
   void* rep_;
 
   inline void MemoryBarrier() const {
-    // TODO(gabor): This only works on Android instruction sets >= V6
 #ifdef ARMV6_OR_7
-    __asm__ __volatile__("dmb" : : : "memory");
+    __asm__ __volatile__("dmb" : : : "memory");//arm>=6
 #else
-	#ifdef __i386__
-    	__asm__ __volatile__("" : : : "memory");//x86
+	#if defined(__i386__) || defined(__x86_64__) || defined(__mips__) || defined(__mips64) || defined(__aarch64__)
+    	__asm__ __volatile__("" : : : "memory");
 	#else
     	pLinuxKernelMemoryBarrier();// arm<6
 	#endif
