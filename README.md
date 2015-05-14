@@ -49,7 +49,7 @@ SnappyDB uses native code for performance, it's available as an [Android Library
 
 ```groovy
 dependencies {
-    compile 'com.snappydb:snappydb-lib:0.5.1'
+    compile 'com.snappydb:snappydb-lib:0.5.2'
     compile 'com.esotericsoftware.kryo:kryo:2.24.0'
 }
 ```
@@ -61,7 +61,7 @@ or
  * Put all the files and folders in the **libs** subfolder of your Android project
 ```
 libs
-├───|── snappydb-0.5.1.jar
+├───|── snappydb-0.5.2.jar
     |── armeabi
     │   └── libsnappydb-native.so
     ├── armeabi-v7a
