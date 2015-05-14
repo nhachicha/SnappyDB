@@ -32,7 +32,6 @@
 #include "util/coding.h"
 #include "util/logging.h"
 #include "util/mutexlock.h"
-#include "debug.h";
 
 namespace leveldb {
 

@@ -4,19 +4,19 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 group = 'com.snappydb'
-version = '0.5.0'
+version = '0.5.2'
 ext.packaging = 'aar'
 def artifact_id = 'snappydb-lib'
 def sonatypeRepositoryUrl
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 19
-        versionCode 4
+        targetSdkVersion 22
+        versionCode 5
         versionName version
     }
 
@@ -30,7 +30,7 @@ android {
         jni.srcDirs = [] //disable automatic ndk-build call
     }
 
-    buildTypes.debug.jniDebugBuild !false
+    buildTypes.debug.jniDebuggable false
 
     // call regular ndk-build script from app directory
     task ndkBuild(type: Exec) {
@@ -59,7 +59,7 @@ dependencies {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.1'
+    gradleVersion = '2.2'
 }
 
 
@@ -80,6 +80,7 @@ task androidJavadocs(type: Javadoc) {
         linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
 
     }
+    failOnError false
     source = "src/main/java"
     classpath += project.files(project.android.getBootClasspath().join(File.pathSeparator))
 }
@@ -108,12 +109,12 @@ uploadArchives {
             pom.artifactId = artifact_id
 
             /*Uncomment to publish to Sonatype*/
-//            repository(url: sonatypeRepositoryUrl) {
-//                authentication(userName: sonatypeUsername, password: sonatypePassword)
-//            }
+            repository(url: sonatypeRepositoryUrl) {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
 
             /*Uncomment to publish to local maven*/
-            repository(url: "file://${System.env.HOME}/.m2/repository/")
+            //repository(url: "file://${System.env.HOME}/.m2/repository/")
 
             pom.project {
                 name 'SnappyDB'
@@ -153,5 +154,5 @@ def isSnapshotBuild() {
 }
 
 def getNdkPath () {
-    System.env.ANDROID_NDK_HOME?:"/Android/android-ndk-r9"
+    System.env.ANDROID_NDK_HOME?:"/Android/android-ndk-r10d"
 }

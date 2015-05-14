@@ -36,10 +36,11 @@ import com.snappydb.sample.tests.api.helper.MyCustomObjectSerializer;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import de.javakaffee.kryoserializers.BitSetSerializer;
 import de.javakaffee.kryoserializers.GregorianCalendarSerializer;
 
@@ -871,6 +872,25 @@ public class BasicOperations extends AndroidTestCase {
         assertEquals(books[1], collection[1]);
         assertEquals(books[2], collection[2]);
 
+    }
+
+    @SmallTest
+    public void testObjectList() throws SnappydbException {
+        snappyDB = DBFactory.open(getContext(), dbName);
+        List<Book> books = new ArrayList<>(3);
+        books.add(new Book("Echo Burning", "0-399-14726-8"));
+        books.add(new Book("Nothing To Lose", "0-593-05702-3"));
+        books.add(new Book("61 Hours", "978-0-593-05706-3"));
+
+        snappyDB.put("books", books);
+
+        ArrayList<Book> mySavedBooks = (ArrayList<Book>) snappyDB.getObject("books", ArrayList.class);
+
+        assertNotNull(mySavedBooks);
+        assertEquals(mySavedBooks.size(), books.size());
+        assertEquals(books.get(0).hashCode(), mySavedBooks.get(0).hashCode());
+        assertEquals(books.get(1).hashCode(), mySavedBooks.get(1).hashCode());
+        assertEquals(books.get(2).hashCode(), mySavedBooks.get(2).hashCode());
     }
 
     @SmallTest
