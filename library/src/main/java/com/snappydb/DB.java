@@ -58,6 +58,8 @@ public interface DB {
 		
 	public void putLong (String key, long val) throws SnappydbException;
 
+	public void write (WriteBatch batch) throws SnappydbException;
+
 	//***********************
 	//*      DELETE 
 	//***********************

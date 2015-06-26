@@ -107,6 +107,14 @@ JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1putLong
 
 /*
  * Class:     com_snappydb_internal_DBImpl
+ * Method:    __write
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1write
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     com_snappydb_internal_DBImpl
  * Method:    __del
  * Signature: (Ljava/lang/String;)V
  */

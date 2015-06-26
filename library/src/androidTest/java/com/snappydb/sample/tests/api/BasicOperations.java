@@ -28,6 +28,7 @@ import com.snappydb.DBFactory;
 import com.snappydb.KeyIterator;
 import com.snappydb.SnappyDB;
 import com.snappydb.SnappydbException;
+import com.snappydb.WriteBatch;
 import com.snappydb.sample.tests.api.helper.Book;
 import com.snappydb.sample.tests.api.helper.Employee;
 import com.snappydb.sample.tests.api.helper.MyCustomObject;
@@ -891,6 +892,120 @@ public class BasicOperations extends AndroidTestCase {
         assertEquals(books.get(0).hashCode(), mySavedBooks.get(0).hashCode());
         assertEquals(books.get(1).hashCode(), mySavedBooks.get(1).hashCode());
         assertEquals(books.get(2).hashCode(), mySavedBooks.get(2).hashCode());
+    }
+
+    @SmallTest
+    public void testWriteBatchBasics() throws SnappydbException {
+        snappyDB = DBFactory.open(getContext(), dbName);
+
+        WriteBatch batch = new WriteBatch();
+        batch.put("BatchString", "Boing!");
+        batch.putShort("BatchShort", (short) 32768);
+        batch.putInt("BatchInt", 128);
+        batch.putBoolean("BatchBool", true);
+        batch.putDouble("BatchDouble", (double) 1005.9);
+        batch.putFloat("BatchFloat", (float) 3.14);
+        batch.putLong("BatchLong", (long) 12345);
+        Book book = new Book("Echo Burning", "0-399-14726-8");
+        batch.put("BatchObject", book);
+
+        snappyDB.write(batch);
+        batch.close();
+
+        snappyDB.close();
+
+        snappyDB = DBFactory.open(getContext(), dbName);
+
+        String actual = snappyDB.get("BatchString");
+        assertEquals("Boing!", actual);
+
+        short actualShort = snappyDB.getShort("BatchShort");
+        assertEquals(actualShort, (short)32768);
+
+        int actualInt = snappyDB.getInt("BatchInt");
+        assertEquals(actualInt, 128);
+
+        boolean actualBool = snappyDB.getBoolean("BatchBool");
+        assertEquals(actualBool, true);
+
+        double actualDouble = snappyDB.getDouble("BatchDouble");
+        assertEquals(actualDouble, (double)1005.9);
+
+        float actualFloat = snappyDB.getFloat("BatchFloat");
+        assertEquals(actualFloat, (float)3.14);
+
+        long actualLong = snappyDB.getLong("BatchLong");
+        assertEquals(actualLong, 12345);
+
+        Book myBook = snappyDB.getObject("BatchObject", Book.class);
+        assertNotNull(myBook);
+        assertEquals(book, myBook);
+
+        snappyDB.destroy();
+    }
+
+    @SmallTest
+    public void testWriteBatchOrder() throws  SnappydbException {
+        snappyDB = DBFactory.open(getContext(), dbName);
+
+        WriteBatch batch = new WriteBatch();
+        batch.put("key", "v1");
+        batch.delete("key");
+        batch.put("key", "v2");
+        batch.put("key", "v3");
+
+        snappyDB.write(batch);
+        batch.close();
+
+        snappyDB.close();
+
+        snappyDB = DBFactory.open(getContext(), dbName);
+
+        String actual = snappyDB.get("key");
+        assertEquals(actual, "v3");
+
+        snappyDB.destroy();
+    }
+
+    @SmallTest
+    public void testWriteBatchObjectArray() throws  SnappydbException {
+        snappyDB = DBFactory.open(getContext(), dbName);
+        WriteBatch batch = new WriteBatch();
+        List<Book> books = new ArrayList<>(3);
+        books.add(new Book("Echo Burning", "0-399-14726-8"));
+        books.add(new Book("Nothing To Lose", "0-593-05702-3"));
+        books.add(new Book("61 Hours", "978-0-593-05706-3"));
+        batch.put("books", books);
+
+        snappyDB.write(batch);
+        batch.close();
+
+        ArrayList<Book> mySavedBooks = (ArrayList<Book>) snappyDB.getObject("books", ArrayList.class);
+
+        assertNotNull(mySavedBooks);
+        assertEquals(mySavedBooks.size(), books.size());
+        assertEquals(books.get(0).hashCode(), mySavedBooks.get(0).hashCode());
+        assertEquals(books.get(1).hashCode(), mySavedBooks.get(1).hashCode());
+        assertEquals(books.get(2).hashCode(), mySavedBooks.get(2).hashCode());
+    }
+
+    @SmallTest
+    public void testWriteBatchClose() throws SnappydbException {
+        snappyDB = DBFactory.open(getContext(), dbName);
+        WriteBatch batch = new WriteBatch();
+        batch.put("Test", "Words");
+        batch.close();
+        try {
+            batch.put("Test2", "More");
+            fail("Should not be able to add operations to closed batch");
+        } catch (SnappydbException e) {
+        }
+
+        try {
+            snappyDB.write(batch);
+            fail("Should not be able to commit a closed batch to the database");
+        } catch (SnappydbException e) {
+        }
     }
 
     @SmallTest

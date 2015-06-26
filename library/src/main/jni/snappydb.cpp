@@ -24,6 +24,7 @@
 #include "com_snappydb_internal_DBImpl.h"
 #include "leveldb/db.h"
 #include "leveldb/options.h"
+#include "leveldb/write_batch.h"
 #include "debug.h";
 
 leveldb::DB* db;
@@ -418,6 +419,25 @@ JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1putFloat(
 
 	} else {
 		std::string err("Failed to put a float: " + status.ToString());
+		throwException(env, err.c_str());
+	}
+}
+
+JNIEXPORT void JNICALL Java_com_snappydb_internal_DBImpl__1_1write
+  (JNIEnv * env, jobject thiz, jlong ptr) {
+  	if (ptr == NULL) {
+  		throwException(env, "Batch is closed");
+  		return;
+  	}
+
+	leveldb::WriteBatch *batch = reinterpret_cast<leveldb::WriteBatch*>(ptr);
+
+	leveldb::Status status = db->Write(leveldb::WriteOptions(), batch);
+
+	if (status.ok()) {
+		LOGI("Successfully writing a batch");
+	} else {
+		std::string err("Failed to write batch: " + status.ToString());
 		throwException(env, err.c_str());
 	}
 }

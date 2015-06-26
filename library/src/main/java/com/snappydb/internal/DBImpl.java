@@ -24,6 +24,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.snappydb.DB;
 import com.snappydb.KeyIterator;
 import com.snappydb.SnappydbException;
+import com.snappydb.WriteBatch;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
@@ -213,6 +214,14 @@ public class DBImpl implements DB {
         checkKey(key);
 
         __putLong(key, val);
+    }
+
+    public void write(WriteBatch batch) throws SnappydbException{
+        if (!batch.isOpen()) {
+            throw new SnappydbException("Batch is not open!");
+        }
+        long ptr = batch.getPointer();
+        __write(ptr);
     }
 
     // ***********************
@@ -566,6 +575,8 @@ public class DBImpl implements DB {
     private native void __putFloat(String key, float val) throws SnappydbException;
 
     private native void __putLong(String key, long val) throws SnappydbException;
+
+    private native void __write(long ptr) throws SnappydbException;
 
     private native void __del(String key) throws SnappydbException;
 
