@@ -10,7 +10,7 @@ SnappyDB can outperform _SQLite_ in read/write operations.
 ![benchmark](http://snappydb.com/img/benchmark_sqlite_with_transaction.png)
 
 
-SnappyDB is based on [leveldb](https://code.google.com/p/leveldb/) and use [snappy compression](https://code.google.com/p/snappy/) algorithm, on redundant content you could achieve a good compression ratio 
+SnappyDB is based on [leveldb](https://code.google.com/p/leveldb/) and use [snappy compression](http://google.github.io/snappy/) algorithm, on redundant content you could achieve a good compression ratio 
 
 Check out the Demo App [![PlayStore](http://snappydb.com/img/en_generic_rgb_wo_45.png)](https://play.google.com/store/apps/details?id=com.snappydb.snippets.app)  
 
