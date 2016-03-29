@@ -21,109 +21,216 @@ import com.esotericsoftware.kryo.Kryo;
 import java.io.Serializable;
 
 public interface DB {
-	//***********************
-	//*      DB MANAGEMENT
-	//***********************
+    //******************************************************************************************************************
+    //*      DB MANAGEMENT
+    //******************************************************************************************************************
 
-    public void close ()  throws SnappydbException;
+    /**
+     * Closes database.
+     *
+     *  @throws SnappydbException
+     */
+    void close ()  throws SnappydbException;
 
-	public void destroy ()  throws SnappydbException;
+    /**
+     * Destroys database
+     *
+     *  @throws SnappydbException
+     */
+    void destroy ()  throws SnappydbException;
 
-    public boolean isOpen ()  throws SnappydbException;
+    /**
+     * Checks if database is open.
+     *
+     * @return {@code true} if database is open.
+     */
+    boolean isOpen ()  throws SnappydbException;
 
-	//***********************
-	//*      CREATE
-	//***********************
-	public void put (String key, byte[] data) throws SnappydbException;
+    //******************************************************************************************************************
+    //*      CREATE
+    //******************************************************************************************************************
 
-	public void put (String key, String value) throws SnappydbException;
-	
-	public void put (String key, Serializable value) throws SnappydbException;
-	
-	public void put (String key, Serializable [] value) throws SnappydbException;
+    /**
+     * Puts the byte array data for the key.
+     *
+     * @param key not null.
+     * @param data not null.
+     * @throws SnappydbException if the key or data is null.
+     */
+    void put (String key, byte[] data) throws SnappydbException;
 
-    public void put (String key, Object object) throws SnappydbException;
+    /**
+     * Puts the {@link String} value for the key.
+     *
+     * @param key not null.
+     * @param value not null.
+     * @throws SnappydbException if the key or value is null.
+     */
+    void put (String key, String value) throws SnappydbException;
 
-    public void put (String key, Object [] object) throws SnappydbException;
-	
-	public void putInt (String key, int val) throws SnappydbException;
-	
-	public void putShort (String key, short val) throws SnappydbException;
-	
-	public void putBoolean (String key, boolean val) throws SnappydbException;
-	
-	public void putDouble (String key, double val) throws SnappydbException;
-	
-	public void putFloat (String key, float val) throws SnappydbException;
-		
-	public void putLong (String key, long val) throws SnappydbException;
+    /**
+     * Puts the {@link Serializable} value for the key.
+     *
+     * @param key not null.
+     * @param value not null.
+     * @throws SnappydbException if the key or value is null.
+     */
+    void put (String key, Serializable value) throws SnappydbException;
 
-	//***********************
-	//*      DELETE 
-	//***********************
-	public void del (String key)  throws SnappydbException;
-	
-	//***********************
-	//*      RETRIEVE 
-	//***********************	
-	public String get(String key)  throws SnappydbException;
-	
-	public byte[] getBytes(String key)  throws SnappydbException;
-	
-	public <T extends Serializable> T get(String key, Class<T> className) throws SnappydbException;
+    /**
+     * Puts the {@link Serializable} value for the key.
+     *
+     * @param key not null.
+     * @param value not null.
+     * @throws SnappydbException if the key or value is null.
+     */
+    void put (String key, Serializable [] value) throws SnappydbException;
 
-    public <T> T getObject(String key, Class<T> className) throws SnappydbException;
+    /**
+     * Puts the {@link Object} for the key.
+     *
+     * @param key not null.
+     * @param object not null.
+     * @throws SnappydbException if the key or object is null.
+     */
+    void put (String key, Object object) throws SnappydbException;
 
-	public <T extends Serializable> T[] getArray (String key, Class<T> className) throws SnappydbException;
+    /**
+     * Puts the {@link Object} array for the key.
+     *
+     * @param key not null.
+     * @param object not null.
+     * @throws SnappydbException if the key is null.
+     */
+    void put (String key, Object [] object) throws SnappydbException;
 
-    public <T> T[] getObjectArray (String key, Class<T> className) throws SnappydbException;
-	
-	public short getShort(String key)  throws SnappydbException;
-	
-	public int getInt(String key)  throws SnappydbException;
-	
-	public boolean getBoolean(String key)  throws SnappydbException;
-	
-	public double getDouble(String key)  throws SnappydbException;
-	
-	public long getLong(String key)  throws SnappydbException;
-	
-	public float getFloat(String key)  throws SnappydbException;
-	
-	//****************************
-	//*      KEYS OPERATIONS 
-	//****************************	
-	public boolean exists (String key) throws SnappydbException;
+    /**
+     * Puts the primitive integer for the key.
+     *
+     * @param key not null.
+     * @param val
+     * @throws SnappydbException if the key is null.
+     */
+    void putInt (String key, int val) throws SnappydbException;
 
-    public String[] findKeys(String prefix) throws SnappydbException;
-    public String[] findKeys(String prefix, int offset) throws SnappydbException;
-    public String[] findKeys(String prefix, int offset, int limit) throws SnappydbException;
+    /**
+     * Puts the short short for the key.
+     *
+     * @param key not null.
+     * @param val
+     * @throws SnappydbException if the key is null.
+     */
+    void putShort (String key, short val) throws SnappydbException;
 
-    public int countKeys(String prefix) throws SnappydbException;
+    /**
+     * Puts the primitive boolean for the key.
+     *
+     * @param key not null.
+     * @param val
+     * @throws SnappydbException if the key is null.
+     */
+    void putBoolean (String key, boolean val) throws SnappydbException;
 
-    public String[] findKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
-    public String[] findKeysBetween(String startPrefix, String endPrefix, int offset) throws SnappydbException;
-    public String[] findKeysBetween(String startPrefix, String endPrefix, int offset, int limit) throws SnappydbException;
+    /**
+     * Puts the primitive double for the key.
+     *
+     * @param key not null.
+     * @param val
+     * @throws SnappydbException if the key is null.
+     */
+    void putDouble (String key, double val) throws SnappydbException;
 
-    public int countKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
+    /**
+     * Puts the primitive float for the key.
+     *
+     * @param key not null.
+     * @param val
+     * @throws SnappydbException if the key is null.
+     */
+    void putFloat (String key, float val) throws SnappydbException;
 
-    //***********************
+    /**
+     * Puts the primitive long for the key.
+     *
+     * @param key not null.
+     * @param val
+     * @throws SnappydbException if the key is null.
+     */
+    void putLong (String key, long val) throws SnappydbException;
+
+    //******************************************************************************************************************
+    //*      DELETE
+    //******************************************************************************************************************
+    /**
+     * Deletes value for the key.
+     *
+     * @param key not null.
+     * @throws SnappydbException if the key is null.
+     */
+    void del (String key)  throws SnappydbException;
+
+    //******************************************************************************************************************
+    //*      RETRIEVE
+    //******************************************************************************************************************
+    String get(String key)  throws SnappydbException;
+
+    byte[] getBytes(String key)  throws SnappydbException;
+
+    <T extends Serializable> T get(String key, Class<T> className) throws SnappydbException;
+
+    <T> T getObject(String key, Class<T> className) throws SnappydbException;
+
+    <T extends Serializable> T[] getArray (String key, Class<T> className) throws SnappydbException;
+
+    <T> T[] getObjectArray (String key, Class<T> className) throws SnappydbException;
+
+    short getShort(String key)  throws SnappydbException;
+
+    int getInt(String key)  throws SnappydbException;
+
+    boolean getBoolean(String key)  throws SnappydbException;
+
+    double getDouble(String key)  throws SnappydbException;
+
+    long getLong(String key)  throws SnappydbException;
+
+    float getFloat(String key)  throws SnappydbException;
+
+    //******************************************************************************************************************
+    //*      KEYS OPERATIONS
+    //******************************************************************************************************************
+    boolean exists (String key) throws SnappydbException;
+
+    String[] findKeys(String prefix) throws SnappydbException;
+    String[] findKeys(String prefix, int offset) throws SnappydbException;
+    String[] findKeys(String prefix, int offset, int limit) throws SnappydbException;
+
+    int countKeys(String prefix) throws SnappydbException;
+
+    String[] findKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
+    String[] findKeysBetween(String startPrefix, String endPrefix, int offset) throws SnappydbException;
+    String[] findKeysBetween(String startPrefix, String endPrefix, int offset, int limit) throws SnappydbException;
+
+    int countKeysBetween(String startPrefix, String endPrefix) throws SnappydbException;
+
+    //******************************************************************************************************************
     //*      ITERATORS
-    //***********************
-    public KeyIterator allKeysIterator() throws SnappydbException;
-    public KeyIterator allKeysReverseIterator() throws SnappydbException;
+    //******************************************************************************************************************
+    KeyIterator allKeysIterator() throws SnappydbException;
+    KeyIterator allKeysReverseIterator() throws SnappydbException;
 
-    public KeyIterator findKeysIterator(String prefix) throws SnappydbException;
-    public KeyIterator findKeysReverseIterator(String prefix) throws SnappydbException;
+    KeyIterator findKeysIterator(String prefix) throws SnappydbException;
+    KeyIterator findKeysReverseIterator(String prefix) throws SnappydbException;
 
-    public KeyIterator findKeysBetweenIterator(String startPrefix, String endPrefix) throws SnappydbException;
-    public KeyIterator findKeysBetweenReverseIterator(String startPrefix, String endPrefix) throws SnappydbException;
+    KeyIterator findKeysBetweenIterator(String startPrefix, String endPrefix) throws SnappydbException;
+    KeyIterator findKeysBetweenReverseIterator(String startPrefix, String endPrefix) throws SnappydbException;
 
-    //*********************************
+    //******************************************************************************************************************
     //*      KRYO SERIALIZATION
-    //*********************************
+    //******************************************************************************************************************
 
-    // Allow the user to access the Kryo instance, for eventual customization
-    public Kryo getKryoInstance ();
+    /**
+     * @return an instance of {@link Kryo}. This is to allow users to customize the {@link Kryo} instance.
+     */
+    Kryo getKryoInstance ();
 }
-
