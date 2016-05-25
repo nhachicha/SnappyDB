@@ -84,7 +84,7 @@ public class SnappyDB {
             return this;
         }
 
-        public Builder registerDefaultSerializer(Class<T extends Serializer> defaultSerializer){
+        public <T> Builder registerDefaultSerializer(Class<T extends Serializer> defaultSerializer){
             if(null == defaultSerializer){
                 throw new IllegalArgumentException("Default Serializer must not be null.");
             }
