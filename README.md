@@ -20,7 +20,7 @@ Usage
 
  ```java
 try {
-	DB snappydb = DBFactory.open(context); //create or open an existing databse using the default name
+	DB snappydb = DBFactory.open(context); //create or open an existing database using the default name
 	
 	snappydb.put("name", "Jack Reacher"); 
 	snappydb.putInt("age", 42);  
