@@ -84,6 +84,14 @@ public class SnappyDB {
             return this;
         }
 
+        public <T> Builder registerDefaultSerializer(Class<T extends Serializer> defaultSerializer){
+            if(null == defaultSerializer){
+                throw new IllegalArgumentException("Default Serializer must not be null.");
+            }
+            this.kryo.setDefaultSerializer(defaultSerializer);
+            return this;
+        }
+
         /**
          * Create the {@link com.snappydb.DB} instance.
          */
