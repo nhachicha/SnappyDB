@@ -49,8 +49,8 @@ SnappyDB uses native code for performance, it's available as an [Android Library
 
 ```groovy
 dependencies {
-    compile 'com.snappydb:snappydb-lib:0.5.2'
-    compile 'com.esotericsoftware.kryo:kryo:2.24.0'
+    implementation 'com.snappydb:snappydb-lib:0.5.2'
+    implementation 'com.esotericsoftware.kryo:kryo:2.24.0'
 }
 ```
 
