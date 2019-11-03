@@ -325,7 +325,7 @@ assertEquals(3, snappyDB.countKeysBetween("android:13", "android:99"));
 
 ### Iterators
 
-Each time you use the offset & limit arguments, the engine makes the query and then scrolls to your offset. Which means that the bigger the offset is, the longer the query will take. This is not a problem on small collections, but on very larg collections, it is.
+Each time you use the offset & limit arguments, the engine makes the query and then scrolls to your offset. Which means that the bigger the offset is, the longer the query will take. This is not a problem on small collections, but on very large collections, it is.
 
 An iterator keeps it's position in the key collection and can be asked for the next key at any time. It is therefore better to use an iterator on very large collections.
 
