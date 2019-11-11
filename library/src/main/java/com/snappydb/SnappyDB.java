@@ -84,13 +84,22 @@ public class SnappyDB {
             return this;
         }
 
+        public Builder kryo(Kryo kryo) {
+            if (null == kryo) {
+                throw new IllegalArgumentException("Kryo Serializer must not be null.");
+            }
+
+            this.kryo = kryo;
+            return this;
+        }
+
         /**
          * Create the {@link com.snappydb.DB} instance.
          */
         public DB build() throws SnappydbException {
             if (null != dir) {
                 File f = new File(dir);
-                if((f.mkdirs() || f.isDirectory()) && f.canWrite()) {
+                if ((f.mkdirs() || f.isDirectory()) && f.canWrite()) {
                     if (null != name) {
                         return DBFactory.open(dir, name, kryo);
                     } else {
