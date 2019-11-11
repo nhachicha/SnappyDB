@@ -121,7 +121,7 @@ public class BasicOperations extends AndroidTestCase {
         DB dbInstance1 = SnappyDB.with(getContext());
         DB dbInstance2 = SnappyDB.with(getContext());
 
-        assertEquals(dbInstance1, dbInstance2);
+        assertSame(dbInstance1, dbInstance2);
 
         dbInstance1.destroy();
     }
@@ -808,6 +808,23 @@ public class BasicOperations extends AndroidTestCase {
         keys = snappyDB.findKeysBetween("android:10", "android:99", 2, 1);
         assertEquals(1, keys.length);
         assertEquals("android:16", keys[0]);
+
+        snappyDB.destroy();
+    }
+
+    @SmallTest
+    public void testKeyRangeValidity() throws SnappydbException {
+        snappyDB = DBFactory.open(getContext(), dbName);
+
+        try {
+            snappyDB.findKeysBetween("", "endPrefix");
+            fail("empty start prefix should not be allowed");
+        } catch (SnappydbException e) {}
+
+        try {
+            snappyDB.findKeysBetween("startPrefix", "");
+            fail("empty end prefix should not be allowed");
+        } catch (SnappydbException e) {}
 
         snappyDB.destroy();
     }

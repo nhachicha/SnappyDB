@@ -4,11 +4,11 @@ import java.io.Closeable;
 
 public interface KeyIterator extends Closeable {
 
-    public boolean hasNext();
+    boolean hasNext();
 
-    public String[] next(int max);
+    String[] next(int max);
 
-    public Iterable<String[]> byBatch(int size);
+    Iterable<String[]> byBatch(int size);
 
     void close();
 

@@ -519,7 +519,7 @@ public class DBImpl implements DB {
 
     private void checkRange (String startPrefix, String endPrefix) throws SnappydbException {
         checkArgNotEmpty (startPrefix, "Starting prefix must not be empty");
-        checkArgNotEmpty (startPrefix, "Ending prefix must not be empty");
+        checkArgNotEmpty (endPrefix, "Ending prefix must not be empty");
     }
 
     private void checkKey (String key) throws SnappydbException {
